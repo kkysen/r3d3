@@ -1,13 +1,21 @@
 # R3D3
 
+## Data Sets
 
-https://www.kaggle.com/usdot/flight-delays/data
+ * [Monthly Tourism Statistics](https://travel.trade.gov/research/monthly/departures/)
+   
+   This dataset contains information on where US citizens are flying to. It divides the data by month and also offers statistics from multiple years.
 
-This dataset contains info about 2015 flight delays and cancellations. 
+ * [Flight Delays](https://www.kaggle.com/usdot/flight-delays/data)
+ 
+   This dataset contains information on flight delays. The delays are tracked by airline, flight, and airport.
 
+## How will the data come alive?
 
-The website will show a heatmap of the world. The brightest parts of the map would be where delays are most frequent. When the user mouses over a specific region on the map, data about the delays (such as average delay time, most frequently delayed airlines, or day of week with most delays) at the airports there would be displayed. The user can see more detailed flight info about specific airports by clicking on the region on the map wher the airport is located.
+  Initially, the user will be shown a blank world map with dots scattered across representing the various airports in the world. 
+  Once the user hits begin, the animation will start and airplanes will begin to fly across the map to various countries. Planes originating from airports that are known to have delays will be slower. The animation will go through all of the months of the year and a progress bar will show what month the animation is currently on. 
+  Our visualization will show users where people in the United States are actually travelling to. It will also show how prone certain areas are to delays. The visualization will provoke questions on why certain areas are popular among US residents and why certain areas are prone to delays.
 
+## D3 feature utilization
 
-The project would be similar to a [chloropleth](https://bl.ocks.org/mbostock/4060606) 
-and a [click to zoom map](https://bl.ocks.org/mbostock/2206590) 
+## Mock-up

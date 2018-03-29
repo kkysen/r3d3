@@ -1,4 +1,5 @@
-# r3d3
+# r3d3: Visualization of Airplane Flights and Delays in the US
+by Team **r3d3**: Khyber Sen, Queenie Xiang, Anish Shenoy, and Kelly Wang
 
 ## Data Sets
 
@@ -38,7 +39,7 @@
    a certain speed, size, and transparency that will be determined by a data set.
 
 
-The project would be similar to a [chloropleth](https://bl.ocks.org/mbostock/4060606) 
+The project should be similar to a [chloropleth](https://bl.ocks.org/mbostock/4060606)
 and a [click to zoom map](https://bl.ocks.org/mbostock/2206590) 
 
 

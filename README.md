@@ -23,3 +23,6 @@
    We plan to use enter selections to populate our map with airports initially. When animating the airplanes, we will have each plane have a certain speed that will be determined by a data set. 
 
 ## Mock-up
+
+![Mock-up](http://geoawesomeness.com/wp-content/uploads/2015/11/US-Flights.jpg)
+[Source](http://googletrends.github.io/iframe-scaffolder/#/s/01fJ5Q)

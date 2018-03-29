@@ -41,6 +41,13 @@ by Team **r3d3**: Khyber Sen, Queenie Xiang, Anish Shenoy, and Kelly Wang
      (This last feature will function similar to
      how many video players are implemented).
 
+  5. The airports shown will be displayed based on their size/traffic,
+     so that the major airports are clearly seen,
+     while the smaller airports don't get in the way and yet are still visible.
+
+  6. There will checkboxes and other ways for the user to filter out the data,
+     such as specific time periods, airlines, airports, areas, etc.
+
 ## D3 feature utilization
 
    We plan to use enter selections to populate our map with airports initially.

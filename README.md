@@ -37,6 +37,11 @@
    When animating the airplanes, we will have each plane have
    a certain speed, size, and transparency that will be determined by a data set.
 
+
+The project would be similar to a [chloropleth](https://bl.ocks.org/mbostock/4060606) 
+and a [click to zoom map](https://bl.ocks.org/mbostock/2206590) 
+
+
 ## Mock-Up
 
 ![Mock-up](http://geoawesomeness.com/wp-content/uploads/2015/11/US-Flights.jpg)

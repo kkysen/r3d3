@@ -32,6 +32,15 @@ by Team **r3d3**: Khyber Sen, Queenie Xiang, Anish Shenoy, and Kelly Wang
      The visualization will provoke questions on why certain areas are popular
      among US residents and why certain areas are prone to delays.
 
+  4. The animation the user plays by clicking begin can also
+     be controlled arbitrarily by moving a sliding bar to the desired time.
+     The animation will then play at a speed proportional to
+     how fast the user is moving the sliding bar,
+     and will progressively move slower the farther the cursor is
+     from the bar as long as it is still being dragged.
+     (This last feature will function similar to
+     how many video players are implemented).
+
 ## D3 feature utilization
 
    We plan to use enter selections to populate our map with airports initially.

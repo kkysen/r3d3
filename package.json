@@ -15,13 +15,17 @@
     "Anish Shenoy",
     "Kelly Wang"
   ],
+  "dependencies": {
+    "d3": "^5.0.0",
+    "d3-selection-multi": "^1.0.1",
+    "@types/d3": "^5.0.0"
+  },
   "devDependencies": {
     "typescript": "^2.8.1",
     "ts-loader": "^4.1.0",
     "webpack": "^4.4.1",
     "webpack-cli": "^2.0.13"
   },
-  "dependencies": {},
   "scripts": {
     "build": "webpack",
     "watch": "webpack --watch",

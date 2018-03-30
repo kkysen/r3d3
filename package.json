@@ -18,7 +18,8 @@
   "dependencies": {
     "d3": "^5.0.0",
     "d3-selection-multi": "^1.0.1",
-    "@types/d3": "^5.0.0"
+    "@types/d3": "^5.0.0",
+    "cors-server": "^1.0.4"
   },
   "devDependencies": {
     "typescript": "^2.8.1",

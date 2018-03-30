@@ -1,7 +1,7 @@
 const path = require("path");
 
 module.exports = {
-    entry: "./src/r3d3.js",
+    entry: "./src/ts/r3d3.js",
     output: {
         filename: "r3d3.js",
         path: path.resolve(__dirname, "dist"),

@@ -103,3 +103,5 @@ ENV/
 
 
 .idea/
+
+node_modules/

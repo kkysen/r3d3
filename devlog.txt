@@ -70,3 +70,149 @@ khyberS -- 2018-03-30 23:35:00
 Ported some old TS util files in src/ts/util.
 
 ============================================================
+khyberS -- 2018-04-03 22:25:00
+
+Added actual data sets for flight delays in src/data.
+
+The main file, flight.csv, is almost 600 MB, too big for Github,
+so I had to use Git LFS (large file storage) to upload/link it to the repo.
+When cloning, make sure to download and turn on Git LFS first.
+
+Added DsvMissingDataStats, which I used to quickly analyze flights.csv
+to determine which columns should be ignored
+and how many full flight records we have (~6 million).
+
+============================================================
+khyberS -- 2018-04-04 18:13:00
+
+Created src/cpp/BinaryFlightDelays, which will convert the 600 MB flights.csv
+into a compact binary form containing only the needed data.
+Loading a 600 MB file into the browser is very slow.
+Manipulating such large, unstructured data will be very slow, too,
+and it can often crash the browser (this happened while testing it).
+
+I'm using C++ for this right now, because it's much easier to organize the data
+into a compact binary format when there's a strong type system
+with all the different types of signed, unsigned, and different-sized integers.
+Perhaps, WebAssembly can also be used to performantly access this data in the browser, too,
+and interop with the main JavaScript.
+
+After examining the data in flight.csv:
+
+Fields:
+    year;
+    month;
+    dayOfMonth;
+    dayOfWeek;
+    airline;
+    flightNumber;
+    tailNumber;
+    originAirport;
+    destinationAirport;
+    scheduledDepartureTime; // hhmm
+    departureTime; // hhmm
+    departureDelay; // -m*
+    taxiOut; // m*
+    wheelsOff; // mmmm
+    scheduledTime; // m*
+    elapsedTime; // m*
+    airTime; // m*
+    distance; // miles
+    wheelsOn; // mmmm
+    taxiOn; // m*
+    scheduledArrivalTime; // hhmm
+    arrivalTime; // hhmm
+    arrivalDelay; // -m*
+    diverted; // 0|1
+    cancelled; // 0|1
+
+ignored b/c not enough data:
+    CANCELLATION_REASON
+    AIR_SYSTEM_DELAY
+    SECURITY_DELAY
+    AIRLINE_DELAY
+    LATE_AIRCRAFT_DELAY
+    WEATHER_DELAY
+
+I think these are the most useful fields,
+the only fields we should be processing and displaying in any capacity.
+Is there anything I'm missing or overlooking?
+Are there any other important fields that can't be calculated from these?
+Are there any other fields we can eliminate?
+
+Useful fields:
+ - day of year
+ - airline
+ - origin airport
+ - destination airport
+ - departureTime
+ - arrivalTime
+ - departureDelay / elapsedTime
+ - arrivalDelay
+
+Using this data, I also think these are some more specific things
+that we should be calculating and showing the user:
+
+    Use both the delays at departure and arrival.
+
+    Color the planes based on how delayed they are:
+        red = delayed
+        green = on time
+        (just like traffic)
+
+    The color of the plane transitions throughout its flight,
+    from the departure delay color to the arrival delay color.
+    While in flight, the color will also fade out,
+    so that the delay color is primarily concentrated
+    near the airport that the delay should be associated with.
+
+    The color delays at airports will build up over time,
+    so that it is easy to visualize which airports are the most delayed.
+    This means that, when delayed at an airport, a plane will leave behind
+    a spreading residue of its delay color.
+
+    The delay of an airport will be calculated multiple ways,
+    which can be selected by the user:
+        by percentage of delayed flights
+        by severity of the delays
+        by the raw number of delays
+
+    There will also be a filter for a delay tolerance,
+    where the user can say, for example, ignore delays that are less than 10 minutes.
+    As a more advanced feature, the user will also have the option of entering
+    a custom function that calculates how heavily a certain delay is weighed,
+    that a function: (delayInMinutes: int) => severity: double.
+
+    There will be a color key/legend mapping the color of a delay
+    to how long the delay is, and this legend will adjust
+    depending on what delay function the user selects.
+
+    There will be a separate view (almost a separate page)
+    that will show a bar chart for each airport, airline, etc. (whatever the user chooses)
+    displaying how delayed that airport, etc. was,
+    again depending on the delay function the user chooses.
+
+    There will be a timeline above the map (for 2015, that's what our data has)
+    that has three markers:
+        two markers that designate the viewing period
+        one marker in between that designates the current time
+    The two outer markers begin at the ends of the timeline
+    and can be placed by the user to change the viewing period.
+    When the user clicks play, the flights, etc. are animated
+    and the time marker progresses from the start to end marker.
+
+    The time marker can also be dragged to any time at at any speed,
+    which will be proportional to the speed of the animation,
+    just like you can drag the cursor through a movie, for example.
+    The farther the actual mouse is from the time marker, however,
+    the slower the animation time progresses, just like in many video players.
+    However, since the animation can only be run so fast,
+    there is a maximum speed at which it can be dragged.
+    If the user tries to drag it any faster, it just won't move.
+
+    Each time the time period selection changes or any of the other settings/filters are changed,
+    the animation must be reset, re-calculated, and rerun.
+    I think it would be way to complicated to keep track of the parts
+    that have to be adjusted, and it would be much easier to just restart everything.
+
+============================================================

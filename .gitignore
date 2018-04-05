@@ -105,3 +105,7 @@ ENV/
 .idea/
 
 node_modules/
+
+.gitignore
+
+cmake-build-debug/

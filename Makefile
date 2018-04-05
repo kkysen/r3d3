@@ -1,7 +1,8 @@
-PORT=8888
+PORT = 8888
 
 all:
-    npm install
-    cors-server $(PORT)
-    cd src/python
-    python app.py
+	npm install
+	cors-server $(PORT)
+	touch running
+	cd src/python
+	python app.py

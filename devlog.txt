@@ -216,3 +216,44 @@ that we should be calculating and showing the user:
     that have to be adjusted, and it would be much easier to just restart everything.
 
 ============================================================
+khyberS -- 2018-04-06 05:32:00
+
+Wrote most of the C++/Wasm code:
+
+    The C++ code has parts that run solely on the server
+    to analyze and optimize the data/code,
+    and parts that will be compiled to Wasm to interop with JS in the browser.
+
+    I managed to compress each flight into 13 bytes
+    (with ~6 mil flights that's ~78 MB, which is a lot less than 600 MB)
+    with a simple Wasm API exposing the data of each flight.
+
+    After more analysis of the data, which I have C++ code to do,
+    I can figure out how to compress the data into even less bytes by packing each bit.
+
+    All the code up to this point is written,
+    but I haven't managed to compile all of it,
+    not to mention testing it all.
+
+Even the storage size isn't a problem anymore,
+we still have 6 million flights that we have to analyze in real time.
+
+I think the Wasm can be definitely leveraged to speed things up,
+and especially offer more consistent performance
+with lower latency that the user won't notice as much.
+
+Instead of exposing all the flights stored in Wasm to JS
+and letting the JS access it through interop'ing,
+the computation can be moved to Wasm
+while still letting the JS control
+how the data is filtered, transformed, and rendered.
+
+I'm not sure exactly how this will work out yet,
+but I think things like filtering,
+of which there are only a set number of possible filters,
+can be easily moved to Wasm for computation,
+but other parts will be much harder and would require
+an interpreter/compiler of sorts implemented in Wasm.
+Instead, we can just pass a JS function to the Wasm code in those cases.
+
+============================================================

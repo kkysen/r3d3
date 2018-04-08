@@ -18,40 +18,6 @@ std::string CompactFlight::Side<offset>::airportName() const noexcept {
     return AIRPORTS[airport()];
 }
 
-template <size_t offset>
-u8 CompactFlight::Side<offset>::minuteOfHour() const noexcept {
-    return static_cast<u8>(minuteOfDay() % 60);
-}
-
-template <size_t offset>
-u8 CompactFlight::Side<offset>::hourOfDay() const noexcept {
-    return static_cast<u8>(minuteOfDay() / 60);
-}
-
-tm CompactFlight::time() const noexcept {
-    tm time = {};
-    time.tm_yday = dayOfYear();
-    time.tm_year = YEAR - 1900;
-    mktime(&time);
-    return time;
-}
-
-u8 CompactFlight::month() const noexcept {
-    return static_cast<u8>(time().tm_mon);
-}
-
-u8 CompactFlight::dayOfMonth() const noexcept {
-    return static_cast<u8>(time().tm_mday);
-}
-
-u8 CompactFlight::week() const noexcept {
-    return static_cast<u8>(dayOfYear() / 52);
-}
-
-u8 CompactFlight::dayOfWeek() const noexcept {
-    return static_cast<u8>(time().tm_wday);
-}
-
 std::string CompactFlight::airlineName() const noexcept {
     return AIRLINES[airline()];
 }
@@ -76,6 +42,10 @@ constexpr u64 allOnes(const u64 size) {
 template <typename T, size_t offset, size_t size>
 T getField(CompactFlight::Bits bits) noexcept {
     // TODO check
+    // TODO if these bit operations are slow,
+    // TODO maybe I should use my own bit struct using bitfields
+    // TODO the bitset is also not packed, which wastes a lot of bytes
+    // TODO but I should wait until I finish analyzing the field ranges first
     bits >>= offset;
     bits &= CompactFlight::Bits(allOnes(size));
     return static_cast<T>(bits.to_ullong());
@@ -99,18 +69,33 @@ void setField(CompactFlight::Bits& bits, const T t) noexcept(false) {
         bits |= t << (offset + size);
     } else {
         const CompactFlight::Bits tBits(t);
-        bits |= t << (offset + size);
+        bits |= tBits << (offset + size);
     }
 };
 
 template <size_t offset>
-u16 CompactFlight::Side<offset>::minuteOfDay() const noexcept {
-    return getField<u16, offset, TIME_BITS>(bits);
+i16 CompactFlight::Side<offset>::minuteOfDay() const noexcept {
+    return getField<i16, offset, TIME_BITS>(bits);
 }
 
 template <size_t offset>
 i8 CompactFlight::Side<offset>::delayMinutes() const noexcept {
     return getField<i8, offset + TIME_BITS, DELAY_BITS>(bits);
+}
+
+template <size_t offset>
+Time CompactFlight::Side<offset>::time() const noexcept {
+    return Time(minuteOfDay());
+}
+
+template <size_t offset>
+Time CompactFlight::Side<offset>::delay() const {
+    return Time(delayMinutes());
+}
+
+template <size_t offset>
+Time CompactFlight::Side<offset>::scheduledTime() const {
+    return time() - delay();
 }
 
 template <size_t offset>
@@ -120,6 +105,10 @@ Airport CompactFlight::Side<offset>::airport() const noexcept {
 
 u16 CompactFlight::dayOfYear() const noexcept {
     return getField<u16, 0, DAY_BITS>(bits);
+}
+
+Date CompactFlight::date() const noexcept {
+    return Date(dayOfYear());
 }
 
 Airline CompactFlight::airline() const noexcept {
@@ -186,4 +175,14 @@ CompactFlight::Bits CompactFlight::convert(std::streambuf& buf) noexcept {
 CompactFlight::CompactFlight(const RawFlight& flight) noexcept(false) : CompactFlight(convert(flight)) {}
 
 CompactFlight::CompactFlight(std::streambuf& buf) noexcept : CompactFlight(convert(buf)) {}
+
+Time CompactFlight::duration() const noexcept {
+    return arrival().time() - departure().time();
+}
+
+Time CompactFlight::scheduledDuration() const noexcept {
+    // TODO hopefully this will all be inlined, so it'll only be a bunch of arithmetic operations
+    return arrival().scheduledTime() - departure().scheduledTime();
+}
+
 

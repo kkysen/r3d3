@@ -6,9 +6,9 @@
 #define BINARYFLIGHTDELAYS_FLIGHTS_H
 
 #include <streambuf>
+#include <future>
 
 #include <emscripten/fetch.h>
-#include <future>
 
 #include "CompactFlight.h"
 
@@ -73,6 +73,8 @@ namespace r3d3 {
          * In some cases, this will just be calling a normal JS function from wasm,
          * but in cases where the inputs are restricted,
          * it's much easier to optimize/compile/interpret.
+         *
+         * Also, see devlog.txt: khyberS -- 2018-04-06 05:32:00
          */
         
         // TODO
@@ -80,6 +82,60 @@ namespace r3d3 {
     };
     
 };
+
+
+
+EMSCRIPTEN_BINDINGS(r3d3) { // NOLINT
+    
+    #define _METHOD(class, name) .function(#name, &r3d3::class::name)
+    
+    
+    
+    #define METHOD(name) _METHOD(CompactFlight, name)
+    
+    emscripten::class_<r3d3::CompactFlight>("CompactFlight")
+            METHOD(date)
+            METHOD(airline)
+            METHOD(airlineName)
+            METHOD(departure)
+            METHOD(arrival);
+    
+    #undef METHOD
+    
+    
+    
+    #define METHOD(name) _METHOD(CompactFlight::Side, name)
+    
+    emscripten::class_<r3d3::CompactFlight::Side>("Side")
+            METHOD(minuteOfDay)
+            METHOD(minuteOfHour)
+            METHOD(hourOfDay)
+            METHOD(delayMinutes)
+            METHOD(airport)
+            METHOD(airportName);
+    
+    #undef METHOD
+    
+    
+    
+    #define METHOD(name) _METHOD(Date, name)
+    
+    emscripten::class_<r3d3::Date>("Date")
+            METHOD(time)
+            METHOD(year)
+            METHOD(dayOfYear)
+            METHOD(month)
+            METHOD(dayOfMonth)
+            METHOD(week)
+            METHOD(dayOfWeek);
+    
+    #undef METHOD
+    
+    
+    
+    #undef _METHOD
+    
+}
 
 
 #endif //BINARYFLIGHTDELAYS_FLIGHTS_H

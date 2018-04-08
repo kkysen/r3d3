@@ -12,6 +12,8 @@
 
 #include "r3d3.h"
 #include "RawFlight.h"
+#include "Date.h"
+#include "Time.h"
 
 namespace r3d3 {
     
@@ -48,16 +50,18 @@ namespace r3d3 {
             static const size_t TIME_BITS = 16;
             static const size_t DELAY_BITS = 8;
             static const size_t AIRPORT_BITS = 16;
+            
+            i16 minuteOfDay() const noexcept;
+            
+            i8 delayMinutes() const noexcept; // i8 might exclude a couple flights
         
         public:
             
-            u16 minuteOfDay() const noexcept;
+            Time time() const noexcept;
             
-            u8 minuteOfHour() const noexcept;
+            Time scheduledTime() const noexcept;
             
-            u8 hourOfDay() const noexcept;
-            
-            i8 delayMinutes() const noexcept; // i8 might exclude a couple flights
+            Time delay() const noexcept;
             
             Airport airport() const noexcept;
             
@@ -72,25 +76,17 @@ namespace r3d3 {
             static void convert(Bits& bits, const RawFlight::Side& side) noexcept(false);
             
         };
-    
+
     private:
         
-        tm time() const noexcept;
+        u16 dayOfYear() const noexcept;
     
     public:
         
         using Departure = Side<OWN_BIT_SIZE + 0 * SIDE_BIT_SIZE>;
         using Arrival = Side<OWN_BIT_SIZE + 1 * SIDE_BIT_SIZE>;
         
-        u16 dayOfYear() const noexcept;
-        
-        u8 month() const noexcept;
-        
-        u8 dayOfMonth() const noexcept;
-        
-        u8 week() const noexcept;
-        
-        u8 dayOfWeek() const noexcept;
+        Date date() const noexcept;
         
         Airline airline() const noexcept;
         
@@ -99,6 +95,12 @@ namespace r3d3 {
         Departure departure() const noexcept;
         
         Arrival arrival() const noexcept;
+        
+        Time duration() const noexcept;
+        
+        Time scheduledDuration() const noexcept;
+        
+        double distance() const noexcept; // miles
         
         void serialize(std::streambuf& buf) const noexcept;
     
@@ -123,41 +125,6 @@ namespace r3d3 {
     };
     
 };
-
-EMSCRIPTEN_BINDINGS(r3d3) { // NOLINT
-    
-    #define _METHOD(class, name) .function(#name, &r3d3::class::name)
-    
-    #define METHOD(name) _METHOD(CompactFlight, name)
-    
-    emscripten::class_<r3d3::CompactFlight>("CompactFlight")
-            METHOD(dayOfYear)
-            METHOD(month)
-            METHOD(dayOfMonth)
-            METHOD(week)
-            METHOD(dayOfWeek)
-            METHOD(airline)
-            METHOD(airlineName)
-            METHOD(departure)
-            METHOD(arrival);
-    
-    #undef METHOD
-    
-    #define METHOD(name) _METHOD(CompactFlight::Side, name)
-    
-    emscripten::class_<r3d3::CompactFlight::Side>("Side")
-            METHOD(minuteOfDay)
-            METHOD(minuteOfHour)
-            METHOD(hourOfDay)
-            METHOD(delayMinutes)
-            METHOD(airport)
-            METHOD(airportName);
-    
-    #undef METHOD
-    
-    #undef _METHOD
-    
-}
 
 
 #endif //BINARYFLIGHTDELAYS_COMPACTFLIGHT_H

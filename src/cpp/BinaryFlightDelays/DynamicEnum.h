@@ -35,9 +35,9 @@ namespace r3d3 {
         
         DynamicEnum(std::string path, LineFilter lineFilter, ValueExtractor valueExtractor) noexcept(false);
         
-        static DynamicEnum ofCsv(std::istream& stream, size_t columnNum = 0) noexcept;
+        static DynamicEnum<size_t, std::string> ofCsv(std::istream& stream, size_t columnNum = 0) noexcept;
         
-        static DynamicEnum ofCsv(std::string path, size_t columnNum = 0) noexcept(false);
+        static DynamicEnum<size_t, std::string> ofCsv(std::string path, size_t columnNum = 0) noexcept(false);
         
         size_type size() const noexcept;
         

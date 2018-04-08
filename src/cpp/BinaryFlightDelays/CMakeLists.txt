@@ -21,4 +21,4 @@ add_executable(BinaryFlightDelays
         RawFlight.h
         CompactFlight.cpp
         CompactFlight.h
-        Flights.cpp Flights.h)
+        Flights.cpp Flights.h Date.cpp Date.h Time.cpp Time.h)

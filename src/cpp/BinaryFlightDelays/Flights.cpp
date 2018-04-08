@@ -7,6 +7,8 @@
 #include <sstream>
 #include <cstring>
 
+#include "Serializer.h"
+
 using namespace r3d3;
 
 Flights::NumFlightsInDay Flights::numFlightsInDay(Flights::FlightsInDay flightsInDay) {
@@ -19,7 +21,7 @@ Flights::Flights(Flights::Array flights) noexcept
 Flights::Array Flights::convert(std::streambuf& buf) noexcept {
     Array flights;
     for (auto i = 0; i < flights.size(); i++) {
-        const NumFlightsInDay numFlightInDay = r3d3::get<NumFlightsInDay>(buf);
+        const NumFlightsInDay numFlightInDay = Serializer<NumFlightsInDay>::get(buf);
         FlightsInDay flightsInDay;
         flightsInDay.reserve(numFlightInDay);
         for (auto j = 0; j <  numFlightInDay; j++) {
@@ -38,7 +40,7 @@ std::streambuf& Flights::convert(const emscripten_fetch_t& fetch) noexcept {
 
 void Flights::serialize(std::streambuf& buf) const noexcept {
     for (const auto flightsInDay : flights) {
-        put(buf, numFlightsInDay(flightsInDay));
+        Serializer<NumFlightsInDay>::put(buf, numFlightsInDay(flightsInDay));
         for (const auto flight : flightsInDay) {
             flight.serialize(buf);
         }

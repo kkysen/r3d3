@@ -37,23 +37,23 @@ std::ostream& operator<<(std::ostream& out, const std::array<T, N> a) noexcept {
 }
 
 template <typename T>
-void put(std::streambuf& buf, const T t) noexcept {
-    union {
-        T t;
-        char chars[sizeof(T)];
-    } u;
-    u.t = t;
-    buf.sputn(u.chars, sizeof(T));
+constexpr size_t r3d3::numBits() {
+    return (size_t) std::numeric_limits<T>::digits;
 }
 
-template <typename T>
-T get(std::streambuf& buf) noexcept {
-    union {
-        T t;
-        char chars[sizeof(T)];
-    } u;
-    buf.sgetn(u.chars, sizeof(T));
-    return u.t;
+template <typename Target, size_t bitSize, typename Source>
+Target r3d3::narrowCast(const Source source) {
+    struct Bits {
+        Target value: bitSize;
+    };
+    Bits bits = {.value = static_cast<Target>(source)};
+    if (bits.value != source) {
+        std::stringstream ss;
+        ss << "overflow: " << source << " (" << numBits<Source>() << ")"
+           << " does not fit in " << bitSize << " bits";
+        throw new std::overflow_error(ss.str());
+    }
+    return bits.value;
 }
 
 std::istream& openFile(const std::string path) noexcept(false) {

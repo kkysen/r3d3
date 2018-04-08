@@ -7,6 +7,7 @@
 
 
 #include <cstdint>
+#include <sstream>
 
 #include "DynamicEnum.h"
 
@@ -34,17 +35,17 @@ namespace r3d3 {
     typedef int32_t i32;
     typedef int64_t i64;
     
+    template <typename T>
+    constexpr size_t numBits();
+    
+    template <typename Target, size_t bitSize = numBits<Target>(), typename Source = i64>
+    Target narrowCast(const Source source);;
+    
     template<typename T>
     std::ostream& operator<<(std::ostream& out, std::vector<T> a) noexcept;
     
     template<typename T, size_t N>
     std::ostream& operator<<(std::ostream& out, std::array<T, N> a) noexcept;
-    
-    template <typename T>
-    void put(std::streambuf& buf, T t) noexcept;
-    
-    template <typename T>
-    T get(std::streambuf& buf) noexcept;
     
     const std::string DIR = "../../../data/flight-delays/";
     const std::string AIRLINES_PATH = DIR + "airlines.csv";

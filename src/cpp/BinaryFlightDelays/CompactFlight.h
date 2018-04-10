@@ -8,12 +8,12 @@
 #include <bitset>
 #include <streambuf>
 
-#include <emscripten/bind.h>
-
 #include "r3d3.h"
 #include "RawFlight.h"
 #include "Date.h"
 #include "Time.h"
+#include "Airport.h"
+#include "Airline.h"
 
 namespace r3d3 {
     
@@ -41,7 +41,7 @@ namespace r3d3 {
                 
                 const u16 time: TIME_BITS;
                 const u16 delay: DELAY_BITS;
-                const Airport airport: AIRPORT_BITS;
+                const Airport::size_type airport: AIRPORT_BITS;
                 
             };
     
@@ -63,8 +63,6 @@ namespace r3d3 {
             
             Airport airport() const noexcept;
             
-            std::string airportName() const noexcept;
-        
         private:
             
             explicit Side(Bits bits) noexcept;
@@ -90,7 +88,7 @@ namespace r3d3 {
         struct Bits {
             
             const u16 day: DAY_BITS;
-            const Airline airline: AIRLINE_BITS;
+            const Airline::size_type airline: AIRLINE_BITS;
             
             const Departure departure;
             const Arrival arrival;
@@ -108,8 +106,6 @@ namespace r3d3 {
         Date date() const noexcept;
         
         Airline airline() const noexcept;
-        
-        std::string airlineName() const noexcept;
         
         Departure departure() const noexcept;
         

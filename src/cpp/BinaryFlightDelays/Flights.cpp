@@ -31,13 +31,6 @@ Flights::Array Flights::convert(std::streambuf& buf) noexcept {
     return flights;
 }
 
-std::streambuf& Flights::convert(const emscripten_fetch_t& fetch) noexcept {
-    // TODO check copy and move constructors
-    std::string data(fetch.data, fetch.numBytes);
-    std::stringbuf buf(data, std::ios_base::in);
-    return buf;
-}
-
 void Flights::serialize(std::streambuf& buf) const noexcept {
     for (const auto flightsInDay : flights) {
         Serializer<NumFlightsInDay>::put(buf, numFlightsInDay(flightsInDay));
@@ -51,7 +44,7 @@ Flights::Flights(std::streambuf& buf) noexcept
         : Flights(convert(buf)) {}
 
 Flights::Flights(const emscripten_fetch_t& fetch) noexcept
-        : Flights(convert(fetch)) {}
+        : Flights(r3d3::convert(fetch)) {}
 
 using OnFetch = void (*)(emscripten_fetch_t* fetch) noexcept;
 using OnFetchRef = void (*)(const emscripten_fetch_t& fetch) noexcept;
@@ -71,11 +64,11 @@ void Flights::load(const std::string url) noexcept {
     attr.attributes = static_cast<u32>(EMSCRIPTEN_FETCH_LOAD_TO_MEMORY)
                       | static_cast<u32>(EMSCRIPTEN_FETCH_PERSIST_FILE);
     
-    attr.onsuccess = convertOnFetch([](const emscripten_fetch_t& fetch) noexcept {
+    attr.onsuccess = convertOnFetch([](const emscripten_fetch_t& fetch) noexcept -> void {
         promise.set_value(Flights(fetch));
     });
     
-    attr.onerror = convertOnFetch([url](const emscripten_fetch_t& fetch) noexcept {
+    attr.onerror = convertOnFetch([url](const emscripten_fetch_t& fetch) noexcept -> void {
         promise.set_exception(std::runtime_error("fetch: " + url));
     });
     

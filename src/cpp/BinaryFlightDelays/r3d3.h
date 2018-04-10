@@ -8,6 +8,7 @@
 
 #include <cstdint>
 #include <sstream>
+#include <emscripten/fetch.h>
 
 #include "DynamicEnum.h"
 
@@ -48,24 +49,16 @@ namespace r3d3 {
     std::ostream& operator<<(std::ostream& out, std::array<T, N> a) noexcept;
     
     const std::string DIR = "../../../data/flight-delays/";
-    const std::string AIRLINES_PATH = DIR + "airlines.csv";
-    const std::string AIRPORTS_PATH = DIR + "airports.csv";
-    const std::string FLIGHTS_PATH = DIR + "flights.csv";
-    
-    using Airlines = DynamicEnum<u8>;
-    using Airports = DynamicEnum<u16>;
-    
-    using Airline = Airlines::size_type;
-    using Airport = Airports::size_type;
-    
-    const Airlines AIRLINES = DynamicEnum<Airline>::ofCsv(AIRLINES_PATH);
-    const Airports AIRPORTS = DynamicEnum<Airport>::ofCsv(AIRPORTS_PATH);
     
     std::istream& openFile(std::string path) noexcept(false);
     
     std::vector<std::string> readLines(std::istream& stream) noexcept;
     
     std::vector<std::string> readLines(std::string path) noexcept(false);
+    
+    std::vector<std::string> split(std::string s, char delimiter) noexcept;
+    
+    std::streambuf& convert(const emscripten_fetch_t& fetch) noexcept;
     
 };
 

@@ -40,3 +40,15 @@ Time Time::operator-(Time time) const noexcept {
 Time Time::operator-() const noexcept {
     return Time(-minute);
 }
+
+Time Time::add(const Time time) const noexcept {
+    return this + time;
+}
+
+Time Time::subtract(r3d3::Time time) const {
+    return this - time;
+}
+
+Time Time::negate() const {
+    return -*this;
+}

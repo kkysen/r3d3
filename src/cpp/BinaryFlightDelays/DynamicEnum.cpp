@@ -54,15 +54,15 @@ std::string splitIndex(const std::string s, const char delimiter, const size_t i
     return s.substr(start, end);
 }
 
-template <typename size_t, typename T>
-DynamicEnum<size_t, T> DynamicEnum<size_t, T>::ofCsv(std::istream& stream, const size_t columnNum) noexcept {
-    const LineFilter lineFilter = [](const size_t i) noexcept {
+template <typename size_t>
+DynamicEnum<size_t, std::string> DynamicEnum<size_t, std::string>::ofCsv(std::istream& stream, const size_t columnNum) noexcept {
+    const LineFilter lineFilter = [](const size_t i) noexcept -> bool {
         return i > 0;
     };
-    const ValueExtractor keyExtractor = [columnNum](const std::string line) noexcept {
+    const ValueExtractor keyExtractor = [columnNum](const std::string line) noexcept -> std::string {
         return splitIndex(line, ',', columnNum);
     };
-    return DynamicEnum(stream, lineFilter, keyExtractor);
+    return DynamicEnum<size_t, std::string>(stream, lineFilter, keyExtractor);
 }
 
 template <typename size_t, typename T>

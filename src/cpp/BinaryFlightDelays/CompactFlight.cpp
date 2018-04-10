@@ -21,7 +21,7 @@ CompactFlight::Side::Bits CompactFlight::Side::convert(const RawFlight::Side& si
     return {
             .time = narrowCast<u16, TIME_BITS>(side.minute),
             .delay = narrowCast<u16, DELAY_BITS>(side.delay - DELAY_OFFSET),
-            .airport = narrowCast<Airport, AIRPORT_BITS>(side.airport),
+            .airport = narrowCast<Airport::size_type, AIRPORT_BITS>(side.airport),
     };
 }
 
@@ -36,7 +36,7 @@ CompactFlight::CompactFlight(const Bits bits) noexcept : bits(bits) {}
 CompactFlight::Bits CompactFlight::convert(const RawFlight& flight) noexcept(false) {
     return {
             .day = narrowCast<u16, DAY_BITS>(flight.dayOfYear),
-            .airline = narrowCast<Airline, AIRLINE_BITS>(flight.airline),
+            .airline = narrowCast<Airline::size_type, AIRLINE_BITS>(flight.airline),
             .departure = Departure(flight.departure),
             .arrival = Arrival(flight.arrival),
     };
@@ -67,7 +67,7 @@ i16 CompactFlight::Side::delayMinutes() const noexcept {
 }
 
 Airport CompactFlight::Side::airport() const noexcept {
-    return bits.airport;
+    return Airport(bits.airport);
 }
 
 
@@ -79,7 +79,7 @@ u16 CompactFlight::dayOfYear() const noexcept {
 }
 
 Airline CompactFlight::airline() const noexcept {
-    return bits.airline;
+    return Airline(bits.airline);
 }
 
 CompactFlight::Departure CompactFlight::departure() const noexcept {
@@ -106,10 +106,6 @@ Time CompactFlight::Side::scheduledTime() const {
     return time() - delay();
 }
 
-std::string CompactFlight::Side::airportName() const noexcept {
-    return AIRPORTS[airport()];
-}
-
 
 
 // CompactFlight methods
@@ -127,6 +123,7 @@ Time CompactFlight::scheduledDuration() const noexcept {
     return arrival().scheduledTime() - departure().scheduledTime();
 }
 
-std::string CompactFlight::airlineName() const noexcept {
-    return AIRLINES[airline()];
+double CompactFlight::distance() const noexcept {
+    // method call distanceTo() allows Airport to possibly cache distances in whatever way
+    return departure().airport().distanceTo(arrival().airport());
 }

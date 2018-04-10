@@ -35,6 +35,12 @@ namespace r3d3 {
         Time operator-(Time time) const noexcept;
         
         Time operator-() const noexcept;
+    
+        Time add(Time time) const noexcept;
+    
+        Time subtract(Time time) const noexcept;
+    
+        Time negate() const noexcept;
         
     };
     

@@ -9,7 +9,9 @@
 #include <future>
 
 #include <emscripten/fetch.h>
+#include <emscripten/bind.h>
 
+#include "Flight.h"
 #include "CompactFlight.h"
 
 namespace r3d3 {
@@ -22,7 +24,7 @@ namespace r3d3 {
         
         using NumFlightsInDay = u16; // large enough for num flights on every day
         
-        using FlightsInDay = std::vector<CompactFlight>;
+        using FlightsInDay = std::vector<Flight>;
         
         static NumFlightsInDay numFlightsInDay(FlightsInDay flightsInDay);
         
@@ -37,8 +39,6 @@ namespace r3d3 {
         explicit Flights(Array flights) noexcept;
         
         static Array convert(std::streambuf& buf) noexcept;
-        
-        static std::streambuf& convert(const emscripten_fetch_t& fetch) noexcept;
         
         static bool startedLoading = false;
         static std::promise<const Flights&> promise;
@@ -87,40 +87,86 @@ namespace r3d3 {
 
 EMSCRIPTEN_BINDINGS(r3d3) { // NOLINT
     
-    #define _METHOD(class, name) .function(#name, &r3d3::class::name)
+    using namespace r3d3;
     
+    using Flight = CompactFlight;
     
+    #define PROPERTY(type, class, name) .type(#name, &class::name)
     
-    #define METHOD(name) _METHOD(CompactFlight, name)
+    #define _METHOD(class, name) PROPERTY(function, class, name)
     
-    emscripten::class_<r3d3::CompactFlight>("CompactFlight")
+    #define STATIC_METHOD(class, name) PROPERTY(class_property, class, name)
+    
+    //
+    
+    #define METHOD(name) _METHOD(Flight, name)
+    
+    emscripten::class_<Flight>("Flight")
             METHOD(date)
             METHOD(airline)
-            METHOD(airlineName)
             METHOD(departure)
+            METHOD(duration)
+            METHOD(scheduledDuration)
+            METHOD(distance)
             METHOD(arrival);
     
     #undef METHOD
     
+    //
     
+    #define METHOD(name) _METHOD(Flight::Side, name)
     
-    #define METHOD(name) _METHOD(CompactFlight::Side, name)
-    
-    emscripten::class_<r3d3::CompactFlight::Side>("Side")
-            METHOD(minuteOfDay)
-            METHOD(minuteOfHour)
-            METHOD(hourOfDay)
-            METHOD(delayMinutes)
-            METHOD(airport)
-            METHOD(airportName);
+    emscripten::class_<Flight::Side>("FlightSide")
+            METHOD(time)
+            METHOD(scheduledTime)
+            METHOD(delay)
+            METHOD(airport);
     
     #undef METHOD
     
+    //
     
+    #define METHOD(name) _METHOD(Airline, name)
+    
+    emscripten::class_<Airline>("Airline")
+            STATIC_METHOD(Airline, numAirlines)
+            METHOD(iataCode)
+            METHOD(name);
+    
+    #undef METHOD
+    
+    //
+    
+    #define METHOD(name) _METHOD(Airport, name)
+    
+    emscripten::class_<Airport>("Airport")
+            STATIC_METHOD(Airport, numAirports)
+            METHOD(iataCode)
+            METHOD(name)
+            METHOD(city)
+            METHOD(state)
+            METHOD(country)
+            METHOD(location)
+            METHOD(distanceTo);
+    
+    #undef METHOD
+    
+    //
+    
+    #define METHOD(name) _METHOD(GeoLocation, name)
+    
+    emscripten::class_<GeoLocation>("GeoLocation")
+            METHOD(latitude)
+            METHOD(longitude)
+            METHOD(distanceTo);
+    
+    #undef METHOD
+    
+    //
     
     #define METHOD(name) _METHOD(Date, name)
     
-    emscripten::class_<r3d3::Date>("Date")
+    emscripten::class_<Date>("Date")
             METHOD(time)
             METHOD(year)
             METHOD(dayOfYear)
@@ -131,7 +177,23 @@ EMSCRIPTEN_BINDINGS(r3d3) { // NOLINT
     
     #undef METHOD
     
+    //
     
+    #define METHOD(name) _METHOD(Time, name)
+    
+    emscripten::class_<Time>("Time")
+            METHOD(minuteOfDay)
+            METHOD(hourOfDay)
+            METHOD(minuteOfHour)
+            METHOD(isAM)
+            METHOD(isPM)
+            METHOD(add)
+            METHOD(subtract)
+            METHOD(negate);
+    
+    #undef METHOD
+    
+    //
     
     #undef _METHOD
     

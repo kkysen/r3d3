@@ -2,8 +2,9 @@
 // Created by Khyber on 4/5/2018.
 //
 
-#include <algorithm>
 #include "RawStringFlight.h"
+
+#include "r3d3.h"
 
 using namespace r3d3;
 
@@ -33,24 +34,6 @@ RawStringFlight::RawStringFlight(const std::vector<std::string> fields) noexcept
         arrivalDelay(fields[22]),
         diverted(fields[23]),
         cancelled(fields[24]) {}
-
-std::vector<std::string> split(const std::string s, const char delimiter) noexcept {
-    const size_t numTokens = static_cast<const size_t>(std::count(s.begin(), s.end(), delimiter));
-    if (numTokens == 0) {
-        return std::vector<std::string>();
-    }
-    size_t prev = 0;
-    size_t pos = 0;
-    std::vector<std::string> tokens;
-    tokens.reserve(numTokens);
-    for (auto i = 0; i < numTokens - 1; i++) {
-        pos = s.find(delimiter, prev);
-        tokens.push_back(s.substr(prev, pos - prev));
-        prev = pos + sizeof(delimiter);
-    }
-    tokens.push_back(s.substr(prev, s.length()));
-    return tokens;
-}
 
 RawStringFlight::RawStringFlight(const std::string csvLine) noexcept
         : RawStringFlight(split(csvLine, ',')) {}

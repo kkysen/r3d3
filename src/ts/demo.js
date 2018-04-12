@@ -2,8 +2,23 @@ var svg = document.getElementById("svg");
 var width = svg.getAttribute("width");
 var height = svg.getAttribute("height");
 
-var xCoordinates = [800, 830, 830, 835,  50, 40, 350, 340];
-var yCoordinates = [200, 150, 155, 145, 250, 240, 280, 245];
+var xCoordinates = [830, 800, 50, 40, 350, 340, 480, 70, 140, 615, 800];
+var yCoordinates = [155, 200, 300, 240, 280, 245, 350, 80, 300, 210, 250];
+
+/*
+Current airports:
+Chicago, IL: ORD 
+NYC, NY: JFK
+Oklahoma City, OK: OKC
+Colorado Springs, CO: COS
+Denver Internationl, CO: DEN
+Philadelphia, PA: PHL
+Washington National, DC: DCA
+Las Vegas, NV: LAS
+San Diego, CA: SAN
+Los Angeles International, CA: LAX
+Salem, OR: SLE
+*/
 
 
 console.log(svg);
@@ -31,6 +46,28 @@ var plot = function() {
 		 function(d) {
 		     return d; });
 
-}	
+}
+
+var retAirportInfo = function(e) {
+    console.log(e.offsetX);
+    console.log(e.offsetY);
+    if ( (e.offsetX >= 795 && e.offsetX <= 805) && (e.offsetY >= 195 && e.offsetY <= 205) ) {
+	console.log("Philadelphia, PA: PHL");
+    }
+
+    if ( (e.offsetX >= 825 && e.offsetX <= 835) && (e.offsetY >= 150 && e.offsetY <= 160) ) {
+	console.log("NYC, NY: JFK");
+    }
+
+    if ( (e.offsetX >= 795 && e.offsetX <= 805) && (e.offsetY >= 245 && e.offsetY <= 255) ) {
+	console.log("Washington National Airport, DC: DCA");
+    }
+
+    if ( (e.offsetX >= 45 && e.offsetX <= 55) && (e.offsetY >= 295 && e.offsetY <= 305) ) {
+	console.log("Los Angeles International Airport, CA: LAX");
+    }
+}
+
+svg.addEventListener("click", retAirportInfo); 
 
 plot();

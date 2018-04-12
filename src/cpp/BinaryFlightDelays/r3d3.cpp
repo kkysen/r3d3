@@ -2,8 +2,10 @@
 // Created by Khyber on 4/5/2018.
 //
 
-#include <algorithm>
 #include "r3d3.h"
+
+#include <algorithm>
+#include <fstream>
 
 template<typename T>
 std::ostream& operator<<(std::ostream& out, const std::vector<T> a) noexcept {
@@ -44,7 +46,7 @@ constexpr size_t r3d3::numBits() {
 
 template <typename Target, size_t bitSize, typename Source>
 Target r3d3::narrowCast(const Source source) {
-    struct Bits {
+    struct Bits final {
         Target value: bitSize;
     };
     Bits bits = {.value = static_cast<Target>(source)};
@@ -57,8 +59,8 @@ Target r3d3::narrowCast(const Source source) {
     return bits.value;
 }
 
-std::istream& openFile(const std::string path) noexcept(false) {
-    std::ifstream file(path);
+std::unique_ptr<std::istream> openFile(const std::string path) noexcept(false) {
+    std::unique_ptr<std::istream> file(new std::ifstream(path));
     if (!file) {
         throw std::ifstream::failure(path);
     }
@@ -74,7 +76,7 @@ std::vector<std::string> readLines(std::istream& stream) noexcept {
 }
 
 std::vector<std::string> readLines(std::string path) noexcept(false) {
-    return readLines(openFile(path));
+    return readLines(*openFile(path));
 }
 
 std::vector<std::string> split(const std::string s, const char delimiter) noexcept {
@@ -93,11 +95,4 @@ std::vector<std::string> split(const std::string s, const char delimiter) noexce
     }
     tokens.push_back(s.substr(prev, s.length()));
     return tokens;
-}
-
-std::streambuf& convert(const emscripten_fetch_t& fetch) noexcept {
-    // TODO check copy and move constructors
-    std::string data(fetch.data, fetch.numBytes);
-    std::stringbuf buf(data, std::ios_base::in);
-    return buf;
 }

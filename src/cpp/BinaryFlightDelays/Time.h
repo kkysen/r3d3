@@ -9,7 +9,7 @@
 
 namespace r3d3 {
     
-    class Time {
+    class Time final {
 
     private:
     

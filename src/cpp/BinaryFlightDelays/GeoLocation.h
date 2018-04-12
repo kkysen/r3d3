@@ -7,7 +7,7 @@
 
 namespace r3d3 {
     
-    class GeoLocation {
+    class GeoLocation final {
     
     private:
         

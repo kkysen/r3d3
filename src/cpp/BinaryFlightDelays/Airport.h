@@ -10,7 +10,7 @@
 
 namespace r3d3 {
     
-    class Airport {
+    class Airport final {
     
     public:
         
@@ -26,7 +26,7 @@ namespace r3d3 {
     
         static const size_t NUM_AIRPORTS = 322;
         
-        struct Fields {
+        struct Fields final {
         
         public:
             
@@ -48,22 +48,26 @@ namespace r3d3 {
         using Airports = DynamicEnum<size_t, Fields>;
         
         static const Airports AIRPORTS;
-        
+    
         static double distances[NUM_AIRPORTS][NUM_AIRPORTS];
+    
+        static void calculateDistances() noexcept;
+
+    public:
         
-        static bool calculateDistances() noexcept;
+        static bool initialized = false;
         
-        // unused, for calling calculatedDistances() above
-        [[unused]] // TODO check if this works
-        static bool calculatedDistances;
+        static void init(std::istream& stream) noexcept;
+    
+        static size_t numAirports() const noexcept;
+
+    private:
         
         const size_t _index;
         
         Fields fields() const noexcept;
     
     public:
-        
-        static size_t numAirports() const noexcept;
     
         explicit Airport(size_t index) noexcept;
         

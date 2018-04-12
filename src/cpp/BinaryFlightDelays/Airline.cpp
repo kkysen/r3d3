@@ -19,7 +19,10 @@ Airline::Fields Airline::Fields::valueExtractor(const std::string line) noexcept
     };
 }
 
-const Airline::AIRLINES = Airlines(PATH, Fields::lineFilter, Fields::valueExtractor); // FIXME
+void Airline::init(std::istream& stream) noexcept {
+    initialized = true;
+    AIRLINES = Airlines(stream, Fields::lineFilter, Fields::valueExtractor); // FIXME
+}
 
 Airline::size_t Airline::numAirlines() const noexcept {
     return NUM_AIRLINES;

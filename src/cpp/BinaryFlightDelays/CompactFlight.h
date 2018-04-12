@@ -37,7 +37,7 @@ namespace r3d3 {
     
             #pragma pack(push, 1)
             
-            struct Bits {
+            struct Bits final {
                 
                 const u16 time: TIME_BITS;
                 const u16 delay: DELAY_BITS;
@@ -85,7 +85,7 @@ namespace r3d3 {
         
         #pragma pack(push, 1)
         
-        struct Bits {
+        struct Bits final {
             
             const u16 day: DAY_BITS;
             const Airline::size_type airline: AIRLINE_BITS;

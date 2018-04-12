@@ -25,7 +25,7 @@ Airport::Fields Airport::Fields::valueExtractor(std::string line) noexcept {
 
 const Airport::AIRPORTS = Airports(PATH, Fields::lineFilter, Fields::valueExtractor); // FIXME
 
-bool Airport::calculateDistances() noexcept {
+void Airport::calculateDistances() noexcept {
     for (size_t i = 0; i < NUM_AIRPORTS; i++) {
         distances[i][i] = 0;
         for (size_t j = static_cast<size_t>(i + 1); j < NUM_AIRPORTS; j++) { // NOLINT
@@ -34,10 +34,13 @@ bool Airport::calculateDistances() noexcept {
             distances[j][i] = distances; // FIXME
         }
     }
-    return true;
 }
 
-const bool Airport::calculatedDistances = calculateDistances();
+void Airport::init(std::istream& stream) noexcept {
+    initialized = true;
+    AIRPORTS = Airports(stream, Fields::lineFilter, Fields::valueExtractor); // FIXME
+    calculateDistances();
+}
 
 Airport::size_t Airport::numAirports() const noexcept {
     return NUM_AIRPORTS;

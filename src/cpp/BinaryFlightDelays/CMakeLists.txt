@@ -21,4 +21,4 @@ add_executable(BinaryFlightDelays
         RawFlight.h
         CompactFlight.cpp
         CompactFlight.h
-        Flights.cpp Flights.h Date.cpp Date.h Time.cpp Time.h Serializer.cpp Serializer.h Airport.cpp Airport.h GeoLocation.cpp GeoLocation.h Airline.cpp Airline.h)
+        Flights.cpp Flights.h Date.cpp Date.h Time.cpp Time.h Serializer.cpp Serializer.h Airport.cpp Airport.h GeoLocation.cpp GeoLocation.h Airline.cpp Airline.h Blob.cpp Blob.h)

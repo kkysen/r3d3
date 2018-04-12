@@ -8,6 +8,8 @@
 
 #include <cstdint>
 #include <sstream>
+#include <memory>
+
 #include <emscripten/fetch.h>
 
 #include "DynamicEnum.h"
@@ -50,15 +52,13 @@ namespace r3d3 {
     
     const std::string DIR = "../../../data/flight-delays/";
     
-    std::istream& openFile(std::string path) noexcept(false);
+    std::unique_ptr<std::istream> openFile(std::string path) noexcept(false);
     
     std::vector<std::string> readLines(std::istream& stream) noexcept;
     
     std::vector<std::string> readLines(std::string path) noexcept(false);
     
     std::vector<std::string> split(std::string s, char delimiter) noexcept;
-    
-    std::streambuf& convert(const emscripten_fetch_t& fetch) noexcept;
     
 };
 

@@ -13,6 +13,7 @@
 
 #include "Flight.h"
 #include "CompactFlight.h"
+#include "Blob.h"
 
 namespace r3d3 {
     
@@ -24,41 +25,38 @@ namespace r3d3 {
         
         using NumFlightsInDay = u16; // large enough for num flights on every day
         
-        using FlightsInDay = std::vector<Flight>;
+        using FlightsInDay = std::vector<CompactFlight>;
         
         static NumFlightsInDay numFlightsInDay(FlightsInDay flightsInDay);
         
-        using Array = std::array<FlightsInDay, DAYS_IN_YEAR>;
+        using AllFlights = std::array<FlightsInDay, DAYS_IN_YEAR>;
         
         // TODO make this a pointer and use RAII
         
-        const Array flights;
+        const AllFlights flights;
         
         // TODO should Array flights be passed by reference, or will copying be elided?
         
-        explicit Flights(Array flights) noexcept;
+        explicit Flights(AllFlights flights) noexcept;
         
-        static Array convert(std::streambuf& buf) noexcept;
-        
-        static bool startedLoading = false;
-        static std::promise<const Flights&> promise;
-        
-        static const u32 MAX_FAILS = 10;
-        static u32 numFails = 0;
-        
-        static void load(std::string url) noexcept;
+        static AllFlights toAllFlights(std::streambuf& buf) noexcept;
     
     public:
-        
-        static const std::string FETCH_ROUTE = "/data/flights";
         
         void serialize(std::streambuf& buf) const noexcept;
         
         explicit Flights(std::streambuf& buf) noexcept;
+    
+    private:
+    
+        static Flights create(Blob flightsData, Blob airportsData, Blob airlinesData);
         
-        explicit Flights(const emscripten_fetch_t& fetch) noexcept;
+    public:
         
-        static std::future<const Flights&> get(std::string url = FETCH_ROUTE) noexcept;
+        // called by JS in fetch calls with Uint8Arrays
+        static Flights create(const u8* flightsData, size_t flightsDataLength,
+                              const u8* airportsData, size_t airportsDataLength,
+                              const u8* airlinesData, size_t airlinesDataLength);
         
         /*
          * For performance sake, instead of using JS to iterate over the flights,
@@ -83,7 +81,7 @@ namespace r3d3 {
     
 };
 
-
+// Wasm exports
 
 EMSCRIPTEN_BINDINGS(r3d3) { // NOLINT
     

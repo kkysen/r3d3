@@ -9,7 +9,7 @@
 
 namespace r3d3 {
     
-    class Date {
+    class Date final {
 
     private:
         

@@ -7,7 +7,7 @@
 
 
 #include <unordered_map>
-#include <fstream>
+#include <istream>
 #include <vector>
 
 namespace r3d3 {

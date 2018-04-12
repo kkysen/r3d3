@@ -5,11 +5,13 @@
 #ifndef BINARYFLIGHTDELAYS_AIRLINE_H
 #define BINARYFLIGHTDELAYS_AIRLINE_H
 
+#include <istream>
+
 #include "r3d3.h"
 
 namespace r3d3 {
     
-    class Airline {
+    class Airline final {
     
     public:
         
@@ -25,7 +27,7 @@ namespace r3d3 {
         
         static const size_t NUM_AIRLINES = 14;
         
-        struct Fields {
+        struct Fields final {
         
         public:
             
@@ -40,15 +42,23 @@ namespace r3d3 {
         
         using Airlines = DynamicEnum<size_t, Fields>;
         
-        static const Airlines AIRLINES;
+        static Airlines AIRLINES;
+
+    public:
+        
+        static bool initialized = false;
+        
+        static void init(std::istream& stream) noexcept;
+    
+        static size_t numAirlines() const noexcept;
+
+    private:
         
         const size_t _index;
         
         Fields fields() const noexcept;
     
     public:
-        
-        static size_t numAirlines() const noexcept ;
     
         explicit Airline(size_t index) noexcept;
         

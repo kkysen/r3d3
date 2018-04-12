@@ -4,27 +4,26 @@
 
 #include "Flights.h"
 
-#include <sstream>
 #include <cstring>
 
 #include "Serializer.h"
 
 using namespace r3d3;
 
-Flights::NumFlightsInDay Flights::numFlightsInDay(Flights::FlightsInDay flightsInDay) {
+Flights::NumFlightsInDay Flights::numFlightsInDay(const Flights::FlightsInDay flightsInDay) {
     return static_cast<NumFlightsInDay>(flightsInDay.size());
 }
 
-Flights::Flights(Flights::Array flights) noexcept
+Flights::Flights(const Flights::AllFlights flights) noexcept
         : flights(flights) {}
 
-Flights::Array Flights::convert(std::streambuf& buf) noexcept {
-    Array flights;
+Flights::AllFlights Flights::toAllFlights(std::streambuf& buf) noexcept {
+    AllFlights flights;
     for (auto i = 0; i < flights.size(); i++) {
         const NumFlightsInDay numFlightInDay = Serializer<NumFlightsInDay>::get(buf);
         FlightsInDay flightsInDay;
         flightsInDay.reserve(numFlightInDay);
-        for (auto j = 0; j <  numFlightInDay; j++) {
+        for (auto j = 0; j < numFlightInDay; j++) {
             flightsInDay.push_back(CompactFlight(buf));
         }
     }
@@ -41,44 +40,23 @@ void Flights::serialize(std::streambuf& buf) const noexcept {
 }
 
 Flights::Flights(std::streambuf& buf) noexcept
-        : Flights(convert(buf)) {}
+        : Flights(toAllFlights(buf)) {}
 
-Flights::Flights(const emscripten_fetch_t& fetch) noexcept
-        : Flights(r3d3::convert(fetch)) {}
-
-using OnFetch = void (*)(emscripten_fetch_t* fetch) noexcept;
-using OnFetchRef = void (*)(const emscripten_fetch_t& fetch) noexcept;
-
-OnFetch convertOnFetch(OnFetchRef onFetch) noexcept {
-    return [](emscripten_fetch_t* fetch) {
-        onFetch(*fetch);
-    };
+Flights Flights::create(const Blob flightsData, const Blob airportsData, const Blob airlinesData) {
+    airlinesData.initUsingInputStream(Airline::init);
+    airportsData.initUsingInputStream(Airport::init);
+    std::stringbuf buf = flightsData.toStringBuf();
+    return Flights(buf);
 }
 
-void Flights::load(const std::string url) noexcept {
-    startedLoading = true;
-    
-    emscripten_fetch_attr_t attr;
-    emscripten_fetch_attr_init(&attr);
-    strcpy(attr.requestMethod, "POST");
-    attr.attributes = static_cast<u32>(EMSCRIPTEN_FETCH_LOAD_TO_MEMORY)
-                      | static_cast<u32>(EMSCRIPTEN_FETCH_PERSIST_FILE);
-    
-    attr.onsuccess = convertOnFetch([](const emscripten_fetch_t& fetch) noexcept -> void {
-        promise.set_value(Flights(fetch));
-    });
-    
-    attr.onerror = convertOnFetch([url](const emscripten_fetch_t& fetch) noexcept -> void {
-        promise.set_exception(std::runtime_error("fetch: " + url));
-    });
-    
-    emscripten_fetch(&attr, url.c_str());
-}
-
-std::future<const Flights&> Flights::get(const std::string url) noexcept {
-    if (!startedLoading) {
-        // concurrency not an issue b/c only one thread in JS
-        load(url);
-    }
-    return promise.get_future();
+Flights Flights::create(
+        const u8* const flightsData, const size_t flightsDataLength,
+        const u8* const airportsData, const size_t airportsDataLength,
+        const u8* const airlinesData, const size_t airlinesDataLength
+) {
+    return create(
+            {.data = flightsData, .length = flightsDataLength},
+            {.data = airportsData, .length = airportsDataLength},
+            {.data = airlinesData, .length = airlinesDataLength}
+    );
 }

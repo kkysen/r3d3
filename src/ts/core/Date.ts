@@ -1,4 +1,4 @@
-interface Date {
+export interface Date {
 
     year(): number;
     

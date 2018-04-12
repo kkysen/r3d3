@@ -1,5 +1,10 @@
-interface FlightSide {
+import {Airport} from "./Airport";
+import {Time} from "./Time";
+import {Date} from "./Date";
 
+
+export interface FlightSide {
+    
     time(): Time;
     
     scheduledTime(): Time;
@@ -7,15 +12,15 @@ interface FlightSide {
     delay(): Time;
     
     airport(): Airport;
-
+    
 }
 
-type Departure = FlightSide;
+export type Departure = FlightSide;
 
-type Arrival = FlightSide;
+export type Arrival = FlightSide;
 
-interface Flight {
-
+export interface Flight {
+    
     date(): Date;
     
     airline(): Airline;
@@ -29,5 +34,5 @@ interface Flight {
     scheduledDuration(): Time;
     
     distance(): number;
-
+    
 }

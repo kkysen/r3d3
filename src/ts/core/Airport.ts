@@ -1,4 +1,6 @@
-interface Airport {
+import {GeoLocation} from "./Geolocation";
+
+export interface Airport {
     
     iataCode(): string;
     

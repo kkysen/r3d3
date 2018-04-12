@@ -1,4 +1,4 @@
-interface Time {
+export interface Time {
     
     minuteOfDay(): number;
     

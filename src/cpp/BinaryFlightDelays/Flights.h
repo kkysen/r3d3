@@ -54,9 +54,9 @@ namespace r3d3 {
     public:
         
         // called by JS in fetch calls with Uint8Arrays
-        static Flights create(const u8* flightsData, size_t flightsDataLength,
-                              const u8* airportsData, size_t airportsDataLength,
-                              const u8* airlinesData, size_t airlinesDataLength);
+        static Flights createJS(const u8* flightsData, size_t flightsDataLength,
+                                const u8* airportsData, size_t airportsDataLength,
+                                const u8* airlinesData, size_t airlinesDataLength);
         
         /*
          * For performance sake, instead of using JS to iterate over the flights,
@@ -94,6 +94,16 @@ EMSCRIPTEN_BINDINGS(r3d3) { // NOLINT
     #define _METHOD(class, name) PROPERTY(function, class, name)
     
     #define STATIC_METHOD(class, name) PROPERTY(class_property, class, name)
+    
+    //
+    
+    #define METHOD(name) _METHOD(Flights, name)
+    
+    emscripten::class_<Flights>("Flights")
+            // TODO add other methods
+            STATIC_METHOD(Flights, createJS);
+    
+    #undef METHOD
     
     //
     

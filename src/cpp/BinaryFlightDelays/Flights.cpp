@@ -49,10 +49,10 @@ Flights Flights::create(const Blob flightsData, const Blob airportsData, const B
     return Flights(buf);
 }
 
-Flights Flights::create(
-        const u8* const flightsData, const size_t flightsDataLength,
-        const u8* const airportsData, const size_t airportsDataLength,
-        const u8* const airlinesData, const size_t airlinesDataLength
+Flights Flights::createJS(
+        const u8* flightsData, size_t flightsDataLength,
+        const u8* airportsData, size_t airportsDataLength,
+        const u8* airlinesData, size_t airlinesDataLength
 ) {
     return create(
             {.data = flightsData, .length = flightsDataLength},

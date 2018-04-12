@@ -1,4 +1,4 @@
-interface GeoLocation {
+export interface GeoLocation {
 
     latitude(): number;
     

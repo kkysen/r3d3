@@ -48,7 +48,7 @@ var plot = function() {
 
 }
 
-var retAirportInfo = function(e) {
+var retInfo = function(e) {
     console.log(e.offsetX);
     console.log(e.offsetY);
     if ( (e.offsetX >= 795 && e.offsetX <= 805) && (e.offsetY >= 195 && e.offsetY <= 205) ) {
@@ -66,8 +66,44 @@ var retAirportInfo = function(e) {
     if ( (e.offsetX >= 45 && e.offsetX <= 55) && (e.offsetY >= 295 && e.offsetY <= 305) ) {
 	console.log("Los Angeles International Airport, CA: LAX");
     }
+    
+    if ( (e.offsetX >= 135 && e.offsetX <= 145) && (e.offsetY >= 295 && e.offsetY <= 305) ) {
+	console.log("Las Vegas, NV: LAS");
+    }
+
 }
 
-svg.addEventListener("click", retAirportInfo); 
+var runAnimation = function() {
+    var xStart = 830;
+    var yStart = 155;
+
+    var xEnd = 50;
+    var yEnd = 290;
+    
+    for (xStart; xStart < xEnd, xStart += 5) {
+    var c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+
+    c.setAttribute("fill","lime");
+    c.setAttribute("r",5);
+    
+	svg.appendChild(c);
+    }
+
+    var circles = d3.selectAll("circle");
+    circles.data(xCoordinates);
+    circles.attr("cx",
+		 function(d) {
+		     return d; });
+    
+    circles.data(yCoordinates);
+    circles.attr("cy",
+		 function(d) {
+		     return d; });
+    
+}
+
+
+svg.addEventListener("click", retInfo); 
 
 plot();
+runAnimation(); 

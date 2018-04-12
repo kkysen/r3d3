@@ -3,10 +3,11 @@ CC = g++ $(FLAGS)
 NAME = DsvMissingDataStats
 MAIN = main.cpp
 LIBS = $(NAME).cpp
-DEFAULT_CSV = /mnt/c/Users/Khyber/Downloads/flight-delays/flights.csv
+DEFAULT_CSV = ../../data/flight-delays/flights.csv
+DEFAULT_IGNORE_COLUMNS = [26, 27, 28, 29, 30, 31]
 
 all:
 	$(CC) -o $(NAME) $(MAIN) $(LIBS)
 
 run: all
-	./$(NAME) $(DEFAULT_CSV)
+	./$(NAME) path=$(DEFAULT_CSV) "ignoreColumns=$(DEFAULT_IGNORE_COLUMNS)"

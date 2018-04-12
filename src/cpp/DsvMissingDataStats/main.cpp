@@ -86,8 +86,8 @@ int main(const int argc, const char* const* const argv) {
                 << "Usage: "
                 << "./" << argv[0] << " "
                 << "path=[csv file]" << ", "
-                << "[ignoredColumns=[a, b, c]]" << ", "
-                << "[ignoredRows=[a, b, c]]"
+                << "[ignoreColumns=[a, b, c]]" << ", "
+                << "[ignoreRows=[a, b, c]]"
                 << std::endl;
         return EXIT_FAILURE;
     }
@@ -100,8 +100,8 @@ int main(const int argc, const char* const* const argv) {
     const std::string path = args[std::string("path")];
     
     std::unordered_map<std::string, std::vector<size_t>> ignored {
-            {"ignoredColumns", std::vector<size_t>()},
-            {"ignoredRows",    std::vector<size_t>()}
+            {"ignoreColumns", std::vector<size_t>()},
+            {"ignoreRows",    std::vector<size_t>()}
     };
     
     for (auto& entry : ignored) {
@@ -116,7 +116,7 @@ int main(const int argc, const char* const* const argv) {
     }
     
     const DsvMissingDataStats stats = DsvMissingDataStats::ofCsvFile(
-            DsvMissingDataStats::FileArgs(path, ignored["ignoredColumns"], ignored["ignoredRows"]));
+            DsvMissingDataStats::FileArgs(path, ignored["ignoreColumns"], ignored["ignoreRows"]));
     
     std::cout << "\n\n" << stats.toString() << std::endl;
     

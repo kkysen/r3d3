@@ -257,3 +257,7 @@ an interpreter/compiler of sorts implemented in Wasm.
 Instead, we can just pass a JS function to the Wasm code in those cases.
 
 ============================================================
+anishS - 2018-04-12 22:22:00
+
+Added some D3 animations. I'm using small, blue svg rectangles to represent planes. As of right now, I have them flying to some other arbitrary airport in the coordinates array. 
+Bugs: One of the "planes" seems to go to a position off the map. I think the error comes from when we're selecting a different point for the plane to travel to. This should go away when we have a deliberate system of picking the destination point using our data.

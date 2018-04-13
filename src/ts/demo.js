@@ -130,8 +130,8 @@ fly.addEventListener("click",
     var planes = d3.selectAll("rect");
     planes.data(xCoordinates)
   .transition().duration(2500)
-  .attr("x", function(d,i){ return xCoordinates[xCoordinates.length - i] })
-  .attr("y", function(d,i){ return yCoordinates[xCoordinates.length - i] });
+  .attr("x", function(d,i){ return xCoordinates[(i+1) % xCoordinates.length] })
+  .attr("y", function(d,i){ return yCoordinates[(i+1) % yCoordinates.length] });
   })
 
 plot();

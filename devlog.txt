@@ -257,3 +257,9 @@ an interpreter/compiler of sorts implemented in Wasm.
 Instead, we can just pass a JS function to the Wasm code in those cases.
 
 ============================================================
+anishS - 2018-04-12 22:22:00
+
+Added some D3 animations. I'm using small, blue svg rectangles to represent planes. 
+There is a "plane" generated at every airport when the page is launched.
+When the fly button is clicked, the planes start flying
+As of right now, I have them flying to some other arbitrary airport in the coordinates array. 

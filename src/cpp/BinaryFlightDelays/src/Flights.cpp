@@ -20,7 +20,7 @@ namespace r3d3 {
     
     Flights::AllFlights Flights::toAllFlights(std::streambuf& buf) noexcept {
         AllFlights flights;
-        for (auto i = 0; i < flights.size(); i++) {
+        for (size_t i = 0; i < flights.size(); i++) {
             const NumFlightsInDay numFlightInDay = Serializer<NumFlightsInDay>::get(buf);
             FlightsInDay flightsInDay;
             flightsInDay.reserve(numFlightInDay);

@@ -91,14 +91,14 @@ namespace r3d3 {
             (Field) {#name, [](const RawFlight flight) noexcept -> i64 { return static_cast<i64>(flight.name); }}
     
     const std::vector<RawFlight::Field> RawFlight::FIELDS = {
-        MAKE_FIELD(dayOfYear),
-        MAKE_FIELD(airline.index()),
-        MAKE_FIELD(departure.minute),
-        MAKE_FIELD(departure.delay),
-        MAKE_FIELD(departure.airport.index()),
-        MAKE_FIELD(arrival.minute),
-        MAKE_FIELD(arrival.delay),
-        MAKE_FIELD(arrival.airport.index()),
+//        MAKE_FIELD(dayOfYear),
+//        MAKE_FIELD(airline.index()),
+//        MAKE_FIELD(departure.minute),
+//        MAKE_FIELD(departure.delay),
+//        MAKE_FIELD(departure.airport.index()),
+//        MAKE_FIELD(arrival.minute),
+//        MAKE_FIELD(arrival.delay),
+//        MAKE_FIELD(arrival.airport.index()),
     };
 
 #undef MAKE_FIELD
@@ -106,10 +106,10 @@ namespace r3d3 {
     std::vector<RawFlight::AnalyzedField> RawFlight::analyzeFieldRanges(
             std::istream& stream, std::vector<RawFlight::Field> fields) noexcept {
         const auto flights = readFlights(stream);
-        const auto numFields = fields.size();
+        const size_t numFields = fields.size();
         std::vector<AnalyzedField> analyzedFields;
         analyzedFields.reserve(numFields);
-        for (auto i = 0; i < numFields; i++) {
+        for (size_t i = 0; i < numFields; i++) {
             const Field field = fields[i];
             std::cout << "analyzing: " << field << std::endl;
             const AnalyzedField analyzedField = {
@@ -131,13 +131,14 @@ namespace r3d3 {
         return out <<
                    analyzedField.field << ": "
                    << analyzedField.range << ", "
-                   << "numBits: " << static_cast<uint>(analyzedField.range.toNumBits());
+                   << "numBits: " << static_cast<u32>(analyzedField.range.toNumBits());
     }
     
     std::ostream& operator<<(std::ostream& out, std::vector<RawFlight::AnalyzedField> analyzedFields) noexcept {
         for (const auto analyzedField : analyzedFields) {
             out << analyzedField;
         }
+        return out;
     }
     
 };

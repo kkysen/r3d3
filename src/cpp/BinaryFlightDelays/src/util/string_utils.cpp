@@ -15,6 +15,7 @@ namespace r3d3 {
             start = i + 1;
             n--;
         }
+        return s.find(search, start);
     }
     
     std::string splitIndex(const std::string s, const char delimiter, const size_t index) noexcept {

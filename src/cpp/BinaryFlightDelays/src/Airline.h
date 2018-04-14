@@ -41,7 +41,7 @@ namespace r3d3 {
         
         static Airlines AIRLINES;
         
-        static std::unordered_map<std::string, size_t> iataMap;
+        static Map<std::string, size_t> iataMap;
         
         static void buildIataMap() noexcept;
     

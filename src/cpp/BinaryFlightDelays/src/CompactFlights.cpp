@@ -106,15 +106,19 @@ void testSerializer() {
     }
 }
 
+#ifndef __EMSCRIPTEN__
+
 int main() {
 //    testBasic();
     init();
 //    testAirlinesAndAirports();
 //    analyzeFields();
-    compactFlights();
+//    compactFlights();
     testCompactFlights();
     
 //    testDate();
 //    testSerializer();
     return 0;
 }
+
+#endif

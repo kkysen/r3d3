@@ -11,11 +11,11 @@
 namespace r3d3 {
     
     std::ostream& operator<<(std::ostream& out, const u8 i) noexcept {
-        out << static_cast<u32>(i);
+        return out << static_cast<u32>(i);
     }
     
     std::ostream& operator<<(std::ostream& out, const i8 i) noexcept {
-        out << static_cast<i32>(i);
+        return out << static_cast<i32>(i);
     }
     
     void checkFile(const std::istream& stream) noexcept(false) {
@@ -51,7 +51,7 @@ namespace r3d3 {
         size_t pos = 0;
         std::vector<std::string> tokens;
         tokens.reserve(numTokens);
-        for (auto i = 0; i < numTokens - 1; i++) {
+        for (size_t i = 0; i < numTokens - 1; i++) {
             pos = s.find(delimiter, prev);
             tokens.push_back(s.substr(prev, pos - prev));
             prev = pos + sizeof(delimiter);

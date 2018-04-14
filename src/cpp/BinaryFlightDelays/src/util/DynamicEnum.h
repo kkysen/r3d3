@@ -9,6 +9,10 @@
 #include <unordered_map>
 #include <istream>
 #include <vector>
+//#include <map>
+
+// TODO FIXME emcc/clang can't compile <unordered_map> for some reason
+#define Map std::unordered_map
 
 namespace r3d3 {
     
@@ -20,7 +24,7 @@ namespace r3d3 {
         using size_type = size_t;
         using value_type = T;
         using KeyValueMap = std::vector<T>;
-        using ValueKeyMap = std::unordered_map<T, size_t>;
+        using ValueKeyMap = Map<T, size_t>;
         using LineFilter = bool (*)(const size_type) noexcept;
         using ValueExtractor = T (*)(const std::string line) noexcept;
     

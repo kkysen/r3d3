@@ -26,7 +26,7 @@ namespace r3d3 {
     
     Airport::Airports Airport::AIRPORTS = {};
     
-    std::unordered_map<std::string, Airport::size_t> Airport::iataMap = {};
+    Map<std::string, Airport::size_t> Airport::iataMap = Map<std::string, Airport::size_t>();
     
     void Airport::buildIataMap() noexcept {
         for (size_t i = 0; i < NUM_AIRPORTS; i++) {

@@ -21,7 +21,7 @@ namespace r3d3 {
     
     Airline::Airlines Airline::AIRLINES = {};
     
-    std::unordered_map<std::string, Airline::size_t> Airline::iataMap = {};
+    Map<std::string, Airline::size_t> Airline::iataMap = Map<std::string, Airline::size_t>();
     
     void Airline::buildIataMap() noexcept {
         for (size_t i = 0; i < NUM_AIRLINES; i++) {

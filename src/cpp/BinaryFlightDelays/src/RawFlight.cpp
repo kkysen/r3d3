@@ -12,7 +12,7 @@ namespace r3d3 {
     
     RawFlight::Side::Side(const RawStringFlight::Side& side) noexcept
             : Side(convert(side)) {}
-
+    
     // hourMinute of form hhmm
     i64 hourMinuteToMinuteOfDay(const i64 hourMinute) noexcept {
         const i64 hour = hourMinute / 100;
@@ -67,7 +67,7 @@ namespace r3d3 {
             std::string firstLine;
             std::getline(stream, firstLine);
         }
-    
+        
         size_t lineNum = 0;
         std::vector<RawFlight> flights;
         for (std::string line; std::getline(stream, line); lineNum++) {
@@ -91,14 +91,16 @@ namespace r3d3 {
             (Field) {#name, [](const RawFlight flight) noexcept -> i64 { return static_cast<i64>(flight.name); }}
     
     const std::vector<RawFlight::Field> RawFlight::FIELDS = {
-//        MAKE_FIELD(dayOfYear),
-//        MAKE_FIELD(airline.index()),
-//        MAKE_FIELD(departure.minute),
-//        MAKE_FIELD(departure.delay),
-//        MAKE_FIELD(departure.airport.index()),
-//        MAKE_FIELD(arrival.minute),
-//        MAKE_FIELD(arrival.delay),
-//        MAKE_FIELD(arrival.airport.index()),
+    #ifndef __EMSCRIPTEN__
+            MAKE_FIELD(dayOfYear),
+            MAKE_FIELD(airline.index()),
+            MAKE_FIELD(departure.minute),
+            MAKE_FIELD(departure.delay),
+            MAKE_FIELD(departure.airport.index()),
+            MAKE_FIELD(arrival.minute),
+            MAKE_FIELD(arrival.delay),
+            MAKE_FIELD(arrival.airport.index()),
+    #endif
     };
 
 #undef MAKE_FIELD

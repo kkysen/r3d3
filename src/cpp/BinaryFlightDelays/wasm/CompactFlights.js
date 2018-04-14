@@ -983,7 +983,28 @@ function allocateUTF8OnStack(str) {
 }
 
 function demangle(func) {
-  warnOnce('warning: build with  -s DEMANGLE_SUPPORT=1  to link in libcxxabi demangling');
+  var __cxa_demangle_func = Module['___cxa_demangle'] || Module['__cxa_demangle'];
+  assert(__cxa_demangle_func);
+  try {
+    var s =
+      func.substr(1);
+    var len = lengthBytesUTF8(s)+1;
+    var buf = _malloc(len);
+    stringToUTF8(s, buf, len);
+    var status = _malloc(4);
+    var ret = __cxa_demangle_func(buf, 0, 0, status);
+    if (HEAP32[((status)>>2)] === 0 && ret) {
+      return Pointer_stringify(ret);
+    }
+    // otherwise, libcxxabi failed
+  } catch(e) {
+    // ignore problems here
+  } finally {
+    if (buf) _free(buf);
+    if (status) _free(status);
+    if (ret) _free(ret);
+  }
+  // failure when using libcxxabi, don't demangle
   return func;
 }
 
@@ -1711,7 +1732,7 @@ var ASM_CONSTS = [];
 
 STATIC_BASE = GLOBAL_BASE;
 
-STATICTOP = STATIC_BASE + 859280;
+STATICTOP = STATIC_BASE + 861104;
 /* global initializers */  __ATINIT__.push({ func: function() { __GLOBAL__I_000101() } }, { func: function() { __GLOBAL__sub_I_CompactFlights_cpp() } }, { func: function() { __GLOBAL__sub_I_RawFlight_cpp() } }, { func: function() { __GLOBAL__sub_I_wasm_cpp() } }, { func: function() { __GLOBAL__sub_I_Airport_cpp() } }, { func: function() { __GLOBAL__sub_I_Airline_cpp() } }, { func: function() { __GLOBAL__sub_I_bind_cpp() } }, { func: function() { __GLOBAL__sub_I_iostream_cpp() } });
 
 
@@ -1720,7 +1741,7 @@ STATICTOP = STATIC_BASE + 859280;
 
 
 
-var STATIC_BUMP = 859280;
+var STATIC_BUMP = 861104;
 Module["STATIC_BASE"] = STATIC_BASE;
 Module["STATIC_BUMP"] = STATIC_BUMP;
 
@@ -7717,6 +7738,12 @@ var real____cxa_can_catch = asm["___cxa_can_catch"]; asm["___cxa_can_catch"] = f
   return real____cxa_can_catch.apply(null, arguments);
 };
 
+var real____cxa_demangle = asm["___cxa_demangle"]; asm["___cxa_demangle"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real____cxa_demangle.apply(null, arguments);
+};
+
 var real____cxa_is_pointer_type = asm["___cxa_is_pointer_type"]; asm["___cxa_is_pointer_type"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
@@ -7751,6 +7778,12 @@ var real__llvm_bswap_i32 = asm["_llvm_bswap_i32"]; asm["_llvm_bswap_i32"] = func
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
   return real__llvm_bswap_i32.apply(null, arguments);
+};
+
+var real__main = asm["_main"]; asm["_main"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__main.apply(null, arguments);
 };
 
 var real__malloc = asm["_malloc"]; asm["_malloc"] = function() {
@@ -7867,6 +7900,10 @@ var ___cxa_can_catch = Module["___cxa_can_catch"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
   return Module["asm"]["___cxa_can_catch"].apply(null, arguments) };
+var ___cxa_demangle = Module["___cxa_demangle"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["___cxa_demangle"].apply(null, arguments) };
 var ___cxa_is_pointer_type = Module["___cxa_is_pointer_type"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
@@ -7891,6 +7928,10 @@ var _llvm_bswap_i32 = Module["_llvm_bswap_i32"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
   return Module["asm"]["_llvm_bswap_i32"].apply(null, arguments) };
+var _main = Module["_main"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["_main"].apply(null, arguments) };
 var _malloc = Module["_malloc"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
@@ -8177,6 +8218,52 @@ dependenciesFulfilled = function runCaller() {
   if (!Module['calledRun']) dependenciesFulfilled = runCaller; // try this again later, after new deps are fulfilled
 }
 
+Module['callMain'] = function callMain(args) {
+  assert(runDependencies == 0, 'cannot call main when async dependencies remain! (listen on __ATMAIN__)');
+  assert(__ATPRERUN__.length == 0, 'cannot call main when preRun functions remain to be called');
+
+  args = args || [];
+
+  ensureInitRuntime();
+
+  var argc = args.length+1;
+  var argv = stackAlloc((argc + 1) * 4);
+  HEAP32[argv >> 2] = allocateUTF8OnStack(Module['thisProgram']);
+  for (var i = 1; i < argc; i++) {
+    HEAP32[(argv >> 2) + i] = allocateUTF8OnStack(args[i - 1]);
+  }
+  HEAP32[(argv >> 2) + argc] = 0;
+
+
+  try {
+
+    var ret = Module['_main'](argc, argv, 0);
+
+
+    // if we're not running an evented main loop, it's time to exit
+      exit(ret, /* implicit = */ true);
+  }
+  catch(e) {
+    if (e instanceof ExitStatus) {
+      // exit() throws this once it's done to make sure execution
+      // has been stopped completely
+      return;
+    } else if (e == 'SimulateInfiniteLoop') {
+      // running an evented main loop, don't immediately exit
+      Module['noExitRuntime'] = true;
+      return;
+    } else {
+      var toLog = e;
+      if (e && typeof e === 'object' && e.stack) {
+        toLog = [e, e.stack];
+      }
+      Module.printErr('exception thrown: ' + toLog);
+      Module['quit'](1, e);
+    }
+  } finally {
+    calledMain = true;
+  }
+}
 
 
 
@@ -8208,7 +8295,7 @@ function run(args) {
 
     if (Module['onRuntimeInitialized']) Module['onRuntimeInitialized']();
 
-    assert(!Module['_main'], 'compiled without a main, but one is present. if you added it from JS, use Module["onRuntimeInitialized"]');
+    if (Module['_main'] && shouldRunNow) Module['callMain'](args);
 
     postRun();
   }
@@ -8343,6 +8430,11 @@ if (Module['preInit']) {
   }
 }
 
+// shouldRunNow refers to calling main(), not run().
+var shouldRunNow = true;
+if (Module['noInitialRun']) {
+  shouldRunNow = false;
+}
 
 Module["noExitRuntime"] = true;
 

@@ -106,19 +106,27 @@ void testSerializer() {
     }
 }
 
-#ifndef __EMSCRIPTEN__
-
-int main() {
-//    testBasic();
+void cpp() {
+    //    testBasic();
     init();
 //    testAirlinesAndAirports();
 //    analyzeFields();
 //    compactFlights();
     testCompactFlights();
-    
+
 //    testDate();
 //    testSerializer();
-    return 0;
 }
 
+void wasm() {
+    pf();
+}
+
+int main() {
+#ifndef __EMSCRIPTEN__
+    cpp();
+#else
+    wasm();
 #endif
+    return 0;
+}

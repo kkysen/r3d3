@@ -1,14 +1,19 @@
-CFLAGS = --std=c++17 -g -ggdb -O3 -march=native -Wall -Werror
+FLAGS = --std=c++1z -Wall -Werror
+
+CFLAGS = $(FLAGS) -g -ggdb -O3 -march=native
 GCC = g++ $(CFLAGS)
 BIN_NAME = CompactFlights
 BIN_FLAGS = -pg
 
-EMCC_FLAGS = -std=c++1z -g3 -Wall -Werror --bind -O0
+EMCC_DEV = -g3 -O0
+EMCC_PRODUCTION = -g0 -O3
+EMCC_FLAGS = $(FLAGS) --bind $(EMCC_DEV)
 EMCC = emcc $(EMCC_FLAGS)
-WASM_NAME = CompactFlights.html
-WASM_FLAGS = -s WASM=1 -s DEMANGLE_SUPPORT=1
-
-CC = g++ $(CFLAGS)
+WASM_EXT = js
+WASM_NAME = $(WASM_EXT)/CompactFlights.$(WASM_EXT)
+WASM_DEV = -s DEMANGLE_SUPPORT=1
+WASM_PRODUCTION = -s DEMANGLE_SUPPORT=0
+WASM_FLAGS = -s WASM=1 $(WASM_DEV)
 
 SRC_DIR = src
 BIN_DIR = bin
@@ -51,6 +56,7 @@ clear: clear_bin clear_wasm
 
 wasm_dir_exists:
 	mkdir -p $(WASM_DIR)
+	mkdir -p $(WASM_DIR)/$(WASM_EXT)
 	mkdir -p $(WASM_DIR)/bc
 	mkdir -p $(WASM_DIR)/bc/util
 
@@ -63,3 +69,4 @@ wasm: wasm_dir_exists $(WASM_DIR)/$(WASM_NAME)
 
 $(WASM_DIR)/$(WASM_NAME): $(WASM_OBJS)
 	$(EMCC) $(WASM_FLAGS) -o $@ $^
+	python src/scripts/fix_arguments.py $(WASM_DIR)/$(WASM_EXT)/CompactFlights.js

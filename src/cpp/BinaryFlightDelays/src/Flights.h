@@ -18,7 +18,9 @@ namespace r3d3 {
     
     private:
         
-        static const size_t DAYS_IN_YEAR = 365; // for 2015
+        using NumDaysInYear = u16;
+        
+        static const NumDaysInYear DAYS_IN_YEAR = 365; // for 2015
         
         using NumFlightsInDay = u16; // large enough for num flights on every day
         
@@ -55,7 +57,7 @@ namespace r3d3 {
     public:
         
         // called by JS in fetch calls with Uint8Arrays
-        static Flights createJS(const u8* flightsData, size_t flightsDataLength,
+        static Flights jsCreate(const u8* flightsData, size_t flightsDataLength,
                                 const u8* airportsData, size_t airportsDataLength,
                                 const u8* airlinesData, size_t airlinesDataLength);
         
@@ -77,6 +79,11 @@ namespace r3d3 {
          */
         
         // TODO
+        // TODO make a separate FlightsInDay class
+        
+        const FlightsInDay& flightsInDay(NumDaysInYear day) const noexcept;
+
+        FlightsInDay& flightsInDay(NumDaysInYear day) noexcept;
         
     };
     

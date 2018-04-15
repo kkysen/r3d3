@@ -63,7 +63,7 @@ namespace r3d3 {
         return Flights(buf);
     }
     
-    Flights Flights::createJS(
+    Flights Flights::jsCreate(
             const u8* flightsData, size_t flightsDataLength,
             const u8* airportsData, size_t airportsDataLength,
             const u8* airlinesData, size_t airlinesDataLength

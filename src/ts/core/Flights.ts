@@ -1,3 +1,5 @@
+import {Module} from "./wasm";
+
 export interface Flights {
     
     // TODO
@@ -20,28 +22,22 @@ export const flights: FlightsSingleton = (function() {
     };
     
     const loadFlights = function(flights: Uint8Array, airports: Uint8Array, airlines: Uint8Array): Flights {
-        // TODO FIXME
-        
-        return (<any> window).Module.Flights.create(
-            flights.buffer, flights.byteLength,
-            airports.buffer, airports.byteLength,
-            airlines.buffer, airlines.byteLength,
-        );
+        return Module.Flights.create(flights, airports, airlines);
     };
     
     const baseUrl = "/data/";
     
     const create = function(): Promise<Flights> {
         return new Promise(resolve => {
-            fetch(baseUrl + "airlines")
+            fetch(baseUrl + "airlines.csv")
                 .catch(console.log)
                 .then(asUint8Array)
                 .then(airlines => {
-                    fetch(baseUrl + "airports")
+                    fetch(baseUrl + "airports.csv")
                         .catch(console.log)
                         .then(asUint8Array)
                         .then(airports => {
-                            fetch(baseUrl + "flights")
+                            fetch(baseUrl + "flights.bin")
                                 .catch(console.log)
                                 .then(asUint8Array)
                                 .then(flights => {

@@ -12,6 +12,9 @@
 
 #include "Flights.h"
 
+// TODO use nbind instead of embind
+// TODO nbind has better C++ syntax, is more powerful, can compile to more targets, and generates .d.ts files
+
 EMSCRIPTEN_BINDINGS(r3d3) { // NOLINT
     
     using namespace r3d3;
@@ -30,8 +33,7 @@ EMSCRIPTEN_BINDINGS(r3d3) { // NOLINT
     
     emscripten::class_<Flights>("Flights")
             // TODO add other methods
-//            .class_function("createJS", &Flights::createJS, emscripten::allow_raw_pointers())
-            STATIC_METHOD(Flights, createJS);
+            STATIC_METHOD(Flights, jsCreate);
     
     #undef METHOD
     

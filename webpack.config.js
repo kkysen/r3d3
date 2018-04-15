@@ -1,11 +1,17 @@
 const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-    entry: "./src/ts/main.js",
+    node: {
+        fs: "empty",
+    },
+    entry: {
+        wasm: "./src/cpp/BinaryFlightDelays/wasm/js/CompactFlights.js",
+        r3d3: "./src/ts/main.js",
+    },
     output: {
-        filename: "r3d3.js",
-        // TODO changed from dist for testing, change back later
-        path: path.resolve(__dirname, "src/cpp/BinaryFlightDelays/wasm"),
+        filename: "[name].js",
+        path: path.resolve(__dirname, "dist"),
     },
     resolve: {
         extensions: [".ts", ".tsx", ".js"],
@@ -18,5 +24,12 @@ module.exports = {
             },
         ]
     },
-    mode: "production",
+    plugins: [
+        new HtmlWebpackPlugin({
+            hash: true,
+            filename: "index.html",
+            template: "./src/html/index.html",
+        }),
+    ],
+    mode: "development",
 };

@@ -16,6 +16,8 @@ namespace r3d3 {
         const u8* const data;
         const size_t length;
         
+        static Blob ofString(std::string data);
+        
         const char* charData() const noexcept;
         
         std::string toString() const noexcept;

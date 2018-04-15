@@ -13,7 +13,7 @@ WASM_EXT = js
 WASM_NAME = $(WASM_EXT)/CompactFlights.$(WASM_EXT)
 WASM_DEV = -s DEMANGLE_SUPPORT=1
 WASM_PRODUCTION = -s DEMANGLE_SUPPORT=0
-WASM_FLAGS = -s WASM=1 $(WASM_DEV)
+WASM_FLAGS = -s WASM=1 -s ALLOW_MEMORY_GROWTH=1 $(WASM_DEV)
 
 SRC_DIR = src
 BIN_DIR = bin
@@ -52,6 +52,9 @@ clear_bin:
 clear_wasm:
 	rm -rf $(WASM_DIR)
 
+clear_wasm_bin:
+	rm -f $(WASM_DIR)/$(WASM_NAME)
+
 clear: clear_bin clear_wasm
 
 wasm_dir_exists:
@@ -65,7 +68,7 @@ $(WASM_DIR)/bc/%.bc: $(SRC_DIR)/%.cpp
 
 wasm_obj: wasm_dir_exists $(WASM_OBJS)
 
-wasm: wasm_dir_exists wrap_with_typescript
+wasm: wasm_dir_exists export_Module
 
 $(WASM_DIR)/$(WASM_NAME): $(WASM_OBJS)
 	$(EMCC) $(WASM_FLAGS) -o $@ $^
@@ -73,6 +76,6 @@ $(WASM_DIR)/$(WASM_NAME): $(WASM_OBJS)
 fix_arguments: $(WASM_DIR)/$(WASM_NAME)
 	python src/scripts/fix_arguments.py $(WASM_DIR)/$(WASM_EXT)/CompactFlights.js
 
-wrap_with_typescript: fix_arguments
-	python src/scripts/wrap_with_typescript.py $(WASM_DIR)/$(WASM_EXT)/CompactFlights.js
+export_Module: fix_arguments
+	python src/scripts/export_Module.py $(WASM_DIR)/$(WASM_EXT)/CompactFlights.js
 

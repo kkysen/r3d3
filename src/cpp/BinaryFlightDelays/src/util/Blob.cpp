@@ -29,4 +29,11 @@ namespace r3d3 {
         init(stream);
     }
     
+    Blob Blob::ofString(std::string data) {
+        return {
+                .data = reinterpret_cast<const u8*>(data.c_str()),
+                .length = data.length(),
+        };
+    }
+    
 };

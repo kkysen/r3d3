@@ -6,9 +6,7 @@ interface FlightsModule extends Module {
         
         create(flightsData: Uint8Array, airportsData: Uint8Array, airlinesData: Uint8Array): Flights;
         
-        jsCreate(flightsData: Uint8Array, flightsDataLength: number,
-                 airportsData: Uint8Array, airportsDataLength: number,
-                 airlinesData: Uint8Array, airlinesDataLength: number): Flights;
+        jsCreate(flightsData: Uint8Array, airportsData: Uint8Array, airlinesData: Uint8Array): Flights;
         
     };
     
@@ -35,11 +33,7 @@ export const postWasm = function(): void {
     console.log("postWasm");
     Module.Flights.create = function(flightsData: Uint8Array, airportsData: Uint8Array,
                                      airlinesData: Uint8Array): Flights {
-        console.log("create");
-        return Module.Flights.jsCreate(
-            flightsData, flightsData.length,
-            airportsData, airportsData.length,
-            airlinesData, airlinesData.length,
-        );
+        console.log("create", arguments);
+        return Module.Flights.jsCreate(flightsData, airportsData, airlinesData);
     };
 };

@@ -21,7 +21,7 @@ EMSCRIPTEN_BINDINGS(r3d3) { // NOLINT
     
     using Flight = CompactFlight;
     
-    #define PROPERTY(type, class, name) .type(#name, &class::name, emscripten::allow_raw_pointers())
+    #define PROPERTY(type, class, name) .type(#name, &class::name)
     
     #define _METHOD(class, name) PROPERTY(function, class, name)
     

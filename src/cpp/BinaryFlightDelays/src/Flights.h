@@ -57,9 +57,8 @@ namespace r3d3 {
     public:
         
         // called by JS in fetch calls with Uint8Arrays
-        static Flights jsCreate(const u8* flightsData, size_t flightsDataLength,
-                                const u8* airportsData, size_t airportsDataLength,
-                                const u8* airlinesData, size_t airlinesDataLength);
+        
+        static Flights jsCreate(std::string flightsData, std::string airportsData, std::string airlinesData);
         
         /*
          * For performance sake, instead of using JS to iterate over the flights,
@@ -81,9 +80,9 @@ namespace r3d3 {
         // TODO
         // TODO make a separate FlightsInDay class
         
-        const FlightsInDay& flightsInDay(NumDaysInYear day) const noexcept;
+//        const FlightsInDay& flightsInDay(NumDaysInYear day) const noexcept;
 
-        FlightsInDay& flightsInDay(NumDaysInYear day) noexcept;
+//        FlightsInDay& flightsInDay(NumDaysInYear day) noexcept;
         
     };
     

@@ -27,13 +27,20 @@ EMSCRIPTEN_BINDINGS(r3d3) { // NOLINT
     
     #define STATIC_METHOD(class, name) PROPERTY(class_function, class, name)
     
+    #define MEMBER(class, name) PROPERTY(property, class, name)
+    
     //
     
     #define METHOD(name) _METHOD(Flights, name)
     
     emscripten::class_<Flights>("Flights")
             // TODO add other methods
-            STATIC_METHOD(Flights, jsCreate);
+            STATIC_METHOD(Flights, jsCreate)
+            METHOD(x)
+            MEMBER(Flights, flights)
+            METHOD(flightInDay)
+            METHOD(flightsInDay)
+            ;
     
     #undef METHOD
     

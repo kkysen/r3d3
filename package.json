@@ -16,9 +16,10 @@
     "Kelly Wang"
   ],
   "dependencies": {
+    "cors-server": "^1.0.4",
     "d3": "^5.0.0",
     "d3-selection-multi": "^1.0.1",
-    "cors-server": "^1.0.4"
+    "npm": "^5.8.0"
   },
   "devDependencies": {
     "typescript": "^2.8.1",

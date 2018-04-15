@@ -15,26 +15,30 @@
 namespace r3d3 {
     
     class Flights final {
+
+    public:
+    
+        using NumDaysInYear = u16;
+    
+        static const NumDaysInYear DAYS_IN_YEAR = 365; // for 2015
+    
+        using NumFlightsInDay = u16; // large enough for num flights on every day
+    
+        using FlightsInDay = std::vector<CompactFlight>;
+    
+        using AllFlights = std::array<FlightsInDay, DAYS_IN_YEAR>;
     
     private:
-        
-        using NumDaysInYear = u16;
-        
-        static const NumDaysInYear DAYS_IN_YEAR = 365; // for 2015
-        
-        using NumFlightsInDay = u16; // large enough for num flights on every day
-        
-        using FlightsInDay = std::vector<CompactFlight>;
-        
+    
         static NumFlightsInDay numFlightsInDay(FlightsInDay flightsInDay);
         
-        using AllFlights = std::array<FlightsInDay, DAYS_IN_YEAR>;
-        
+    public:
+    
         // TODO make this a pointer and use RAII
-        
         const AllFlights flights;
-        
         // TODO should Array flights be passed by reference, or will copying be elided?
+    
+    private:
         
         explicit Flights(AllFlights flights) noexcept;
         
@@ -80,9 +84,13 @@ namespace r3d3 {
         // TODO
         // TODO make a separate FlightsInDay class
         
-//        const FlightsInDay& flightsInDay(NumDaysInYear day) const noexcept;
-
-//        FlightsInDay& flightsInDay(NumDaysInYear day) noexcept;
+        FlightsInDay flightsInDay(NumDaysInYear day) const noexcept;
+    
+        CompactFlight flightInDay(NumDaysInYear day, NumFlightsInDay flightNum) const noexcept;
+        
+        int x() const noexcept {
+            return 5;
+        }
         
     };
     

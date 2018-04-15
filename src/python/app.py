@@ -44,7 +44,7 @@ def make_file_data_route(filename, dir, prefix=""):
 
 map(lambda filename: make_file_data_route(filename, "data/flight-delays", "data"),
     ["flights.bin", "airports.csv", "airlines.csv"])
-make_file_data_route("CompactFlights.wasm", "cpp/BinaryFlightDelays/wasm/html", "")
+make_file_data_route("CompactFlights.wasm", "cpp/BinaryFlightDelays/wasm/js", "")
 
 
 # @app.route("/src/<path:filename>")

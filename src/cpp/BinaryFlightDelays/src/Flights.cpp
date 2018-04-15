@@ -71,4 +71,12 @@ namespace r3d3 {
         );
     }
     
+    Flights::FlightsInDay Flights::flightsInDay(const NumDaysInYear day) const noexcept {
+        return flights[day];
+    }
+    
+    CompactFlight Flights::flightInDay(NumDaysInYear day, NumFlightsInDay flightNum) const noexcept {
+        return flightsInDay(day)[flightNum];
+    }
+    
 };

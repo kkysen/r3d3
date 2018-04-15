@@ -41,7 +41,9 @@ bin_obj: bin_dir_exists $(BIN_OBJS)
 $(BIN_DIR)/$(BIN_NAME): $(BIN_OBJS)
 	$(GCC) -o $@ $^ $(OUT_FLAGS)
 
-all: bin_dir_exists $(BIN_DIR)/$(BIN_NAME) wasm
+cpp: bin_dir_exists $(BIN_DIR)/$(BIN_NAME)
+
+all: cpp wasm
 
 run: bin_dir_exists $(BIN_DIR)/$(BIN_NAME)
 	./$(BIN_NAME)
@@ -68,14 +70,11 @@ $(WASM_DIR)/bc/%.bc: $(SRC_DIR)/%.cpp
 
 wasm_obj: wasm_dir_exists $(WASM_OBJS)
 
-wasm: wasm_dir_exists export_Module
+wasm: wasm_dir_exists preprocess
 
 $(WASM_DIR)/$(WASM_NAME): $(WASM_OBJS)
 	$(EMCC) $(WASM_FLAGS) -o $@ $^
 
-fix_arguments: $(WASM_DIR)/$(WASM_NAME)
-	python src/scripts/fix_arguments.py $(WASM_DIR)/$(WASM_EXT)/CompactFlights.js
-
-export_Module: fix_arguments
-	python src/scripts/export_Module.py $(WASM_DIR)/$(WASM_EXT)/CompactFlights.js
+preprocess: $(WASM_DIR)/$(WASM_NAME)
+	python src/scripts/preprocess.py $(WASM_DIR)/$(WASM_EXT)/CompactFlights.js
 

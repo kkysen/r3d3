@@ -6,6 +6,19 @@ const realMain = function() {
     flights.get()
         .then(flights => {
             console.log(flights);
+            // const flightsInDay = flights.flightsInDay(1);
+            // console.log(flightsInDay);
+            const flight = flights.flightInDay(0, 0);
+            console.log(flight);
+            console.log(flight.departure());
+            console.log(flight.departure().airport());
+            console.log(flight.departure().airport().name());
+            
+            let distance: number = 0;
+            for (let i = 0; i < 100; i++) {
+                distance += flights.flightInDay(0, i).distance();
+            }
+            console.log(distance);
         });
 };
 

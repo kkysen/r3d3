@@ -1,9 +1,14 @@
 import {cachedFetch, Fetch} from "../util/cachedFetch";
+import {Flight} from "./Flight";
 import {Module} from "./wasm";
 
 export interface Flights {
     
     // TODO
+    
+    flightsInDay(day: number): Flight[];
+    
+    flightInDay(day: number, flightNum: number): Flight;
     
     forEach(func: (Flight) => void): void;
     

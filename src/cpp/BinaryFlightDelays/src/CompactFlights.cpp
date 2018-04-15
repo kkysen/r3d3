@@ -81,6 +81,19 @@ void testCompactFlights() {
     std::ifstream compactFlightsFile(DIR + "flights.bin");
     const Flights flights(*compactFlightsFile.rdbuf());
     std::cout << "Finished compacting flights.csv into flights.bin" << std::endl;
+    
+    const CompactFlight flight = flights.flightInDay(0, 0);
+    p(flight.departure().airport().name());
+    p(flight.departure().airport().location());
+    p(flight.arrival().airport().name());
+    p(flight.arrival().airport().location());
+    p(flight.distance());
+    
+    double distance = 0;
+    for (Flights::NumFlightsInDay i = 0; i < 100; i++) {
+        distance += flights.flightInDay(0, i).distance();
+    }
+    p(distance);
 }
 
 void testDate() {

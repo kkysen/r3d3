@@ -1,6 +1,6 @@
 import {Flights} from "./Flights";
 
-declare interface FlightsModule extends Module {
+interface FlightsModule extends Module {
     
     Flights: {
         
@@ -14,12 +14,32 @@ declare interface FlightsModule extends Module {
     
 }
 
-Module.Flights.create = function(flightsData: Uint8Array, airportsData: Uint8Array, airlinesData: Uint8Array): Flights {
-    return Module.Flights.jsCreate(
-        flightsData, flightsData.length,
-        airportsData, airportsData.length,
-        airlinesData, airlinesData.length
-    );
+export let Module: FlightsModule = undefined;
+
+export const runAfterWasm = function <T>(func: () => T): Promise<T> {
+    // console.log(func);
+    Module = Module || (<any> window).Module;
+    return new Promise(resolve => {
+        const wrapper = function() {
+            resolve(func());
+        };
+        if (Module.Flights) {
+            wrapper();
+        } else {
+            Module.postRun.push(wrapper);
+        }
+    });
 };
 
-export declare var Module: FlightsModule;
+export const postWasm = function(): void {
+    console.log("postWasm");
+    Module.Flights.create = function(flightsData: Uint8Array, airportsData: Uint8Array,
+                                     airlinesData: Uint8Array): Flights {
+        console.log("create");
+        return Module.Flights.jsCreate(
+            flightsData, flightsData.length,
+            airportsData, airportsData.length,
+            airlinesData, airlinesData.length,
+        );
+    };
+};

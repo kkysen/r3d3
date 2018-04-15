@@ -1,5 +1,3 @@
-export const nativeFetch = window.fetch;
-
 const origin = window.location.origin;
 
 export const corsServerUrl: string = "http://localhost:8888/";
@@ -14,7 +12,8 @@ export const isSameOrigin = function(url: string) {
     return getOrigin(url) === origin;
 };
 
-export const fetch = window.fetch = function(input?: string | Request, init?: RequestInit): Promise<Response> {
+export const fetch = function(input?: string | Request, init?: RequestInit): Promise<Response> {
+    console.log(arguments);
     const url: string = input instanceof Request ? input.url : input;
     if (!isSameOrigin(url)) {
         const newUrl = corsServerUrl + url;
@@ -24,5 +23,5 @@ export const fetch = window.fetch = function(input?: string | Request, init?: Re
             input = newUrl
         }
     }
-    return nativeFetch(input, init);
+    return window.fetch(input, init);
 };

@@ -1,3 +1,4 @@
+import {cachedFetch, Fetch} from "../util/cachedFetch";
 import {Module} from "./wasm";
 
 export interface Flights {
@@ -17,6 +18,7 @@ export interface FlightsSingleton {
 export const flights: FlightsSingleton = (function() {
     
     const asUint8Array = function(response: Response): Promise<Uint8Array> {
+        console.log(response);
         return response.arrayBuffer()
             .then(buffer => new Uint8Array(buffer));
     };
@@ -25,9 +27,11 @@ export const flights: FlightsSingleton = (function() {
         return Module.Flights.create(flights, airports, airlines);
     };
     
-    const baseUrl = "/data/";
+    const baseUrl = "data/";
     
     const create = function(): Promise<Flights> {
+        console.log("creating Flights");
+        const fetch: Fetch = cachedFetch;
         return new Promise(resolve => {
             fetch(baseUrl + "airlines.csv")
                 .catch(console.log)

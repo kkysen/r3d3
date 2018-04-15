@@ -6,7 +6,7 @@ from sys import argv
 def fix_arguments(path):
     js = open(path).read()
     js = js.replace("args = args || Module['arguments'];", "")
-    open(path, 'w').write(js)
+    open(path, "w").write(js)
 
 
 def main():

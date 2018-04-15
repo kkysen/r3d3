@@ -1,4 +1,6 @@
-declare interface Module {
+type Runnable = () => void;
+
+interface Module {
     
     // preamble.js
     
@@ -66,6 +68,10 @@ declare interface Module {
     removeRunDependency(id: string): void;
     
     stackTrace(): void; // TODO FIXME
+    
+    preRun: Runnable[];
+    
+    postRun: Runnable[];
     
 }
 

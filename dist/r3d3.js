@@ -79,7 +79,7 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\r\nObject.defineProperty(exports, \"__esModule\", { value: true });\r\nconst wasm_1 = __webpack_require__(/*! ./wasm */ \"./src/ts/core/wasm.ts\");\r\nexports.flights = (function () {\r\n    const asUint8Array = function (response) {\r\n        return response.arrayBuffer()\r\n            .then(buffer => new Uint8Array(buffer));\r\n    };\r\n    const loadFlights = function (flights, airports, airlines) {\r\n        return wasm_1.Module.Flights.create(flights, airports, airlines);\r\n    };\r\n    const baseUrl = \"/data/\";\r\n    const create = function () {\r\n        return new Promise(resolve => {\r\n            fetch(baseUrl + \"airlines.csv\")\r\n                .catch(console.log)\r\n                .then(asUint8Array)\r\n                .then(airlines => {\r\n                fetch(baseUrl + \"airports.csv\")\r\n                    .catch(console.log)\r\n                    .then(asUint8Array)\r\n                    .then(airports => {\r\n                    fetch(baseUrl + \"flights.bin\")\r\n                        .catch(console.log)\r\n                        .then(asUint8Array)\r\n                        .then(flights => {\r\n                        resolve(loadFlights(flights, airports, airlines));\r\n                    });\r\n                });\r\n            });\r\n        });\r\n    };\r\n    let promise;\r\n    return {\r\n        get() {\r\n            return promise || (promise = create());\r\n        }\r\n    };\r\n})();\r\n\n\n//# sourceURL=webpack:///./src/ts/core/Flights.ts?");
+eval("\r\nObject.defineProperty(exports, \"__esModule\", { value: true });\r\nconst cachedFetch_1 = __webpack_require__(/*! ../util/cachedFetch */ \"./src/ts/util/cachedFetch.ts\");\r\nconst wasm_1 = __webpack_require__(/*! ./wasm */ \"./src/ts/core/wasm.ts\");\r\nexports.flights = (function () {\r\n    const asUint8Array = function (response) {\r\n        console.log(response);\r\n        return response.arrayBuffer()\r\n            .then(buffer => new Uint8Array(buffer));\r\n    };\r\n    const loadFlights = function (flights, airports, airlines) {\r\n        return wasm_1.Module.Flights.create(flights, airports, airlines);\r\n    };\r\n    const baseUrl = \"data/\";\r\n    const create = function () {\r\n        console.log(\"creating Flights\");\r\n        const fetch = cachedFetch_1.cachedFetch;\r\n        return new Promise(resolve => {\r\n            fetch(baseUrl + \"airlines.csv\")\r\n                .catch(console.log)\r\n                .then(asUint8Array)\r\n                .then(airlines => {\r\n                fetch(baseUrl + \"airports.csv\")\r\n                    .catch(console.log)\r\n                    .then(asUint8Array)\r\n                    .then(airports => {\r\n                    fetch(baseUrl + \"flights.bin\")\r\n                        .catch(console.log)\r\n                        .then(asUint8Array)\r\n                        .then(flights => {\r\n                        resolve(loadFlights(flights, airports, airlines));\r\n                    });\r\n                });\r\n            });\r\n        });\r\n    };\r\n    let promise;\r\n    return {\r\n        get() {\r\n            return promise || (promise = create());\r\n        }\r\n    };\r\n})();\r\n\n\n//# sourceURL=webpack:///./src/ts/core/Flights.ts?");
 
 /***/ }),
 
@@ -91,7 +91,7 @@ eval("\r\nObject.defineProperty(exports, \"__esModule\", { value: true });\r\nco
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\r\nObject.defineProperty(exports, \"__esModule\", { value: true });\r\nexports.Module.Flights.create = function (flightsData, airportsData, airlinesData) {\r\n    return exports.Module.Flights.jsCreate(flightsData, flightsData.length, airportsData, airportsData.length, airlinesData, airlinesData.length);\r\n};\r\n\n\n//# sourceURL=webpack:///./src/ts/core/wasm.ts?");
+eval("\r\nObject.defineProperty(exports, \"__esModule\", { value: true });\r\nexports.Module = undefined;\r\nexports.runAfterWasm = function (func) {\r\n    // console.log(func);\r\n    exports.Module = exports.Module || window.Module;\r\n    return new Promise(resolve => {\r\n        const wrapper = function () {\r\n            resolve(func());\r\n        };\r\n        if (exports.Module.Flights) {\r\n            wrapper();\r\n        }\r\n        else {\r\n            exports.Module.postRun.push(wrapper);\r\n        }\r\n    });\r\n};\r\nexports.postWasm = function () {\r\n    console.log(\"postWasm\");\r\n    exports.Module.Flights.create = function (flightsData, airportsData, airlinesData) {\r\n        console.log(\"create\");\r\n        return exports.Module.Flights.jsCreate(flightsData, flightsData.length, airportsData, airportsData.length, airlinesData, airlinesData.length);\r\n    };\r\n};\r\n\n\n//# sourceURL=webpack:///./src/ts/core/wasm.ts?");
 
 /***/ }),
 
@@ -103,7 +103,7 @@ eval("\r\nObject.defineProperty(exports, \"__esModule\", { value: true });\r\nex
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\r\nObject.defineProperty(exports, \"__esModule\", {value: true});\r\n__webpack_require__(/*! ./util/extensions */ \"./src/ts/util/extensions.ts\");\r\nconst r3d3_1 = __webpack_require__(/*! ./r3d3 */ \"./src/ts/r3d3.ts\");\r\n(function r3d3() {\r\n    r3d3_1.main();\r\n})();\r\n//# sourceMappingURL=main.js.map\n\n//# sourceURL=webpack:///./src/ts/main.js?");
+eval("\r\nObject.defineProperty(exports, \"__esModule\", { value: true });\r\n__webpack_require__(/*! ./util/extensions */ \"./src/ts/util/extensions.ts\");\r\nconst r3d3_1 = __webpack_require__(/*! ./r3d3 */ \"./src/ts/r3d3.ts\");\r\n(function r3d3() {\r\n    r3d3_1.main();\r\n})();\r\n//# sourceMappingURL=main.js.map\n\n//# sourceURL=webpack:///./src/ts/main.js?");
 
 /***/ }),
 
@@ -115,7 +115,19 @@ eval("\r\nObject.defineProperty(exports, \"__esModule\", {value: true});\r\n__we
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\r\nObject.defineProperty(exports, \"__esModule\", { value: true });\r\nconst Flights_1 = __webpack_require__(/*! ./core/Flights */ \"./src/ts/core/Flights.ts\");\r\nexports.main = function () {\r\n    console.log(exports.main);\r\n    Flights_1.flights.get()\r\n        .then(flights => {\r\n        console.log(flights);\r\n    });\r\n};\r\n\n\n//# sourceURL=webpack:///./src/ts/r3d3.ts?");
+eval("\r\nObject.defineProperty(exports, \"__esModule\", { value: true });\r\nconst Flights_1 = __webpack_require__(/*! ./core/Flights */ \"./src/ts/core/Flights.ts\");\r\nconst wasm_1 = __webpack_require__(/*! ./core/wasm */ \"./src/ts/core/wasm.ts\");\r\nconst realMain = function () {\r\n    console.log(\"realMain\");\r\n    Flights_1.flights.get()\r\n        .then(flights => {\r\n        console.log(flights);\r\n    });\r\n};\r\nexports.main = function () {\r\n    [wasm_1.postWasm, realMain].forEach(wasm_1.runAfterWasm);\r\n};\r\n\n\n//# sourceURL=webpack:///./src/ts/r3d3.ts?");
+
+/***/ }),
+
+/***/ "./src/ts/util/cachedFetch.ts":
+/*!************************************!*\
+  !*** ./src/ts/util/cachedFetch.ts ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+eval("\r\nObject.defineProperty(exports, \"__esModule\", { value: true });\r\nconst deserializeResponse = function (serialized) {\r\n    return new Response(new TextEncoder().encode(serialized));\r\n};\r\nconst serializeResponse = function (arrayBuffer) {\r\n    return new TextDecoder().decode(arrayBuffer);\r\n};\r\nexports.cachedFetch = function (input, init) {\r\n    const key = JSON.stringify({\r\n        input: input,\r\n        init: init,\r\n    });\r\n    const cachedValue = localStorage.getItem(key);\r\n    if (cachedValue) {\r\n        return Promise.resolve(deserializeResponse(cachedValue));\r\n    }\r\n    init = init || {};\r\n    init.cache = \"reload\"; // force reload, b/c caching anyways\r\n    return fetch(input, init)\r\n        .then(response => response.arrayBuffer())\r\n        .then(buffer => {\r\n        try {\r\n            localStorage.setItem(key, serializeResponse(buffer));\r\n        }\r\n        catch (e) {\r\n            console.log(\"unable to cache in localStorage\");\r\n            console.log(e);\r\n        }\r\n        return new Response(buffer);\r\n    });\r\n};\r\n\n\n//# sourceURL=webpack:///./src/ts/util/cachedFetch.ts?");
 
 /***/ }),
 

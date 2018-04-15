@@ -65,8 +65,14 @@ $(WASM_DIR)/bc/%.bc: $(SRC_DIR)/%.cpp
 
 wasm_obj: wasm_dir_exists $(WASM_OBJS)
 
-wasm: wasm_dir_exists $(WASM_DIR)/$(WASM_NAME)
+wasm: wasm_dir_exists wrap_with_typescript
 
 $(WASM_DIR)/$(WASM_NAME): $(WASM_OBJS)
 	$(EMCC) $(WASM_FLAGS) -o $@ $^
+
+fix_arguments: $(WASM_DIR)/$(WASM_NAME)
 	python src/scripts/fix_arguments.py $(WASM_DIR)/$(WASM_EXT)/CompactFlights.js
+
+wrap_with_typescript: fix_arguments
+	python src/scripts/wrap_with_typescript.py $(WASM_DIR)/$(WASM_EXT)/CompactFlights.js
+

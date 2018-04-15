@@ -10,7 +10,7 @@ app = Flask(__name__, root_path=os.path.abspath("../../dist"), template_folder="
 @app.route("/")
 def r3d3():
     # type: () -> Response
-    map(print, app.url_map.iter_rules())
+    # map(print, app.url_map.iter_rules())
     return render_template("index.html")
 
 
@@ -18,6 +18,7 @@ def make_data_route(app, route, path, mime_type=None):
     # type: (Flask, str, str, str) -> None
     def data():
         # type: () -> Response
+        print(route)
         return send_file(os.path.abspath(path), mimetype=mime_type)
         # return Response(response=open(path).read(), mimetype=mime_type)
     

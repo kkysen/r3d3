@@ -1,5 +1,7 @@
 import {flights, flightsPromise} from "./core/Flights";
 import {extendFlightsInterfaces, postWasm, runAfterWasm} from "./core/wasm";
+import {cachedFetch} from "./util/cachedFetch";
+import d3 = require("d3");
 
 const timeDistances = (<any> window).timeDistances = function() {
     console.log("running");
@@ -27,7 +29,15 @@ const flightsMain = function() {
 };
 
 const preFlightsMain = function() {
-
+    (<any> window).d3 = d3;
+    
+    const div = document.body.appendDiv();
+    
+    cachedFetch("map.svg")
+        .then(response => response.text())
+        .then(svg => {
+            div.innerHTML = svg;
+        })
 };
 
 const realMain = function() {

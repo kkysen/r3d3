@@ -22,6 +22,8 @@ namespace r3d3 {
         
         GeoLocation(double latitude, double longitude) noexcept;
         
+        static GeoLocation of(double latitude, double longitude) noexcept;
+        
         double latitude() const noexcept;
         
         double longitude() const noexcept;

@@ -42,7 +42,6 @@ namespace r3d3 {
             distances[i][i] = 0;
             for (size_t j = static_cast<size_t>(i + 1); j < NUM_AIRPORTS; j++) { // NOLINT
                 const double distance = Airport(i).location() - Airport(j).location();
-//                p(i << ", " << j << ", " << distance);
                 distances[i][j] = distance;
                 distances[j][i] = distance;
             }
@@ -61,11 +60,19 @@ namespace r3d3 {
         buildIataMap();
     }
     
-    Airport::size_t Airport::numAirports() noexcept {
+    Airport::size_t Airport::count() noexcept {
         return NUM_AIRPORTS;
     }
     
+    Airport::size_t Airport::numAirports() noexcept {
+        return count();
+    }
+    
     Airport::Airport(Airport::size_t index) noexcept : _index(index) {}
+    
+    Airport Airport::of(Airport::size_t index) noexcept {
+        return Airport(index);
+    }
     
     Airport::Airport(std::string iataCode) noexcept : Airport(iataMap[iataCode]) {}
     
@@ -103,9 +110,6 @@ namespace r3d3 {
     
     double Airport::distanceTo(const Airport airport) const noexcept {
         // optimize by precomputing distance
-//        p(_index);
-//        p(airport._index);
-//        p(distances[_index][airport._index]);
         return distances[_index][airport._index];
 //        return location() - airport.location();
     }

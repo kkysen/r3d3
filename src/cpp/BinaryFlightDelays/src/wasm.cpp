@@ -34,12 +34,27 @@ EMSCRIPTEN_BINDINGS(r3d3) { // NOLINT
     #define METHOD(name) _METHOD(Flights, name)
     
     emscripten::class_<Flights>("Flights")
-            // TODO add other methods
             STATIC_METHOD(Flights, jsCreate)
-            METHOD(x)
-            MEMBER(Flights, flights)
-            METHOD(flightInDay)
-            METHOD(flightsInDay)
+            METHOD(size)
+            METHOD(numDays)
+            METHOD(numFlights)
+            METHOD(get)
+            METHOD(flight)
+            METHOD(totalDistance)
+        //
+            ;
+    
+    #undef METHOD
+    
+    //
+    
+    #define METHOD(name) _METHOD(FlightsInDay, name)
+    
+    emscripten::class_<FlightsInDay>("FlightsInDay")
+            METHOD(size)
+            METHOD(numFlights)
+            METHOD(get)
+        //
             ;
     
     #undef METHOD
@@ -55,7 +70,9 @@ EMSCRIPTEN_BINDINGS(r3d3) { // NOLINT
             METHOD(duration)
             METHOD(scheduledDuration)
             METHOD(distance)
-            METHOD(arrival);
+            METHOD(arrival)
+        //
+            ;
     
     #undef METHOD
     
@@ -67,7 +84,9 @@ EMSCRIPTEN_BINDINGS(r3d3) { // NOLINT
             METHOD(time)
             METHOD(scheduledTime)
             METHOD(delay)
-            METHOD(airport);
+            METHOD(airport)
+        //
+            ;
     
     #undef METHOD
     
@@ -76,9 +95,14 @@ EMSCRIPTEN_BINDINGS(r3d3) { // NOLINT
     #define METHOD(name) _METHOD(Airline, name)
     
     emscripten::class_<Airline>("Airline")
+            STATIC_METHOD(Airline, count)
             STATIC_METHOD(Airline, numAirlines)
+            STATIC_METHOD(Airline, of)
+            METHOD(index)
             METHOD(iataCode)
-            METHOD(name);
+            METHOD(name)
+        //
+            ;
     
     #undef METHOD
     
@@ -87,14 +111,19 @@ EMSCRIPTEN_BINDINGS(r3d3) { // NOLINT
     #define METHOD(name) _METHOD(Airport, name)
     
     emscripten::class_<Airport>("Airport")
+            STATIC_METHOD(Airport, count)
             STATIC_METHOD(Airport, numAirports)
+            STATIC_METHOD(Airport, of)
+            METHOD(index)
             METHOD(iataCode)
             METHOD(name)
             METHOD(city)
             METHOD(state)
             METHOD(country)
             METHOD(location)
-            METHOD(distanceTo);
+            METHOD(distanceTo)
+        //
+            ;
     
     #undef METHOD
     
@@ -103,9 +132,12 @@ EMSCRIPTEN_BINDINGS(r3d3) { // NOLINT
     #define METHOD(name) _METHOD(GeoLocation, name)
     
     emscripten::class_<GeoLocation>("GeoLocation")
+            STATIC_METHOD(GeoLocation, of)
             METHOD(latitude)
             METHOD(longitude)
-            METHOD(distanceTo);
+            METHOD(distanceTo)
+        //
+            ;
     
     #undef METHOD
     
@@ -114,13 +146,16 @@ EMSCRIPTEN_BINDINGS(r3d3) { // NOLINT
     #define METHOD(name) _METHOD(Date, name)
     
     emscripten::class_<Date>("Date")
+            STATIC_METHOD(Date, of)
             METHOD(time)
             METHOD(year)
             METHOD(dayOfYear)
             METHOD(month)
             METHOD(dayOfMonth)
             METHOD(week)
-            METHOD(dayOfWeek);
+            METHOD(dayOfWeek)
+        //
+            ;
     
     #undef METHOD
     
@@ -129,6 +164,7 @@ EMSCRIPTEN_BINDINGS(r3d3) { // NOLINT
     #define METHOD(name) _METHOD(Time, name)
     
     emscripten::class_<Time>("Time")
+            STATIC_METHOD(Time, of)
             METHOD(minuteOfDay)
             METHOD(hourOfDay)
             METHOD(minuteOfHour)
@@ -136,7 +172,9 @@ EMSCRIPTEN_BINDINGS(r3d3) { // NOLINT
             METHOD(isPM)
             METHOD(add)
             METHOD(subtract)
-            METHOD(negate);
+            METHOD(negate)
+        //
+            ;
     
     #undef METHOD
     

@@ -7,8 +7,10 @@
 
 namespace r3d3 {
     
-    Date::Date(const u16 dayOfYear) noexcept : day(dayOfYear) {
+    Date::Date(const u16 dayOfYear) noexcept : day(dayOfYear) {}
     
+    Date Date::of(u16 dayOfYear) noexcept {
+        return Date(dayOfYear);
     }
     
     tm Date::time() const noexcept {

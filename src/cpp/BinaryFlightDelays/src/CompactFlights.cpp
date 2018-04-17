@@ -8,7 +8,7 @@
 #include "Flights.h"
 #include "util/Serializer.h"
 
-const std::string DIR = "../../data/flight-delays/";
+const std::string DIR = "../../../data/flight-delays/";
 
 std::ifstream airlinesFile(DIR + "airlines.csv");
 std::ifstream airportsFile(DIR + "airports.csv");
@@ -73,6 +73,7 @@ void compactFlights() {
     const Flights flights(rawFlights);
     std::ofstream compactFlightsFile(DIR + "flights.bin");
     flights.serialize(*compactFlightsFile.rdbuf());
+    std::cout << "Finished compacting flights.csv into flights.bin" << std::endl;
 }
 
 void testCompactFlights() {
@@ -80,20 +81,31 @@ void testCompactFlights() {
     
     std::ifstream compactFlightsFile(DIR + "flights.bin");
     const Flights flights(*compactFlightsFile.rdbuf());
-    std::cout << "Finished compacting flights.csv into flights.bin" << std::endl;
+    std::cout << "Finished loading flights.bin" << std::endl;
     
-    const CompactFlight flight = flights.flightInDay(0, 0);
+    const CompactFlight flight = flights[0][0];
+    p(flight.departure().airport().iataCode());
     p(flight.departure().airport().name());
     p(flight.departure().airport().location());
+    p(flight.arrival().airport().iataCode());
     p(flight.arrival().airport().name());
     p(flight.arrival().airport().location());
     p(flight.distance());
+    GeoLocation::once = true;
+    p(flight.departure().airport().location() - flight.arrival().airport().location());
     
-    double distance = 0;
-    for (Flights::NumFlightsInDay i = 0; i < 100; i++) {
-        distance += flights.flightInDay(0, i).distance();
-    }
-    p(distance);
+//    double distance = 0;
+//    for (Flights::size_t i = 0; i < flights.size() / 300; i++) {
+//        p(i << " " << distance);
+//        p(flights[i].size() / 13);
+//        for (FlightsInDay::size_t j = 0; j < flights[i].size() / 13; j++) {
+//            p(j);
+//            distance += flights[i][j].distance();
+//        }
+//    }
+//    p(distance);
+    
+    p(std::fixed << flights.totalDistance() << std::scientific);
 }
 
 void testDate() {

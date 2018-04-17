@@ -123,6 +123,12 @@ declare interface Function {
     
     applyReturning<T>(this: (arg: T) => void): (arg: T) => T;
     
+    mapping<T, U>(this: (arg: T) => U): (array: T[]) => U[];
+    
+    applying<T, U>(this: (...args: T[]) => U): (array: T[]) => U;
+    
+    timed<T>(this: T): T;
+    
 }
 
 Object.defineImmutableProperties(Function.prototype, {
@@ -138,6 +144,25 @@ Object.defineImmutableProperties(Function.prototype, {
         };
     },
     
+    mapping<T, U>(this: (arg: T) => U): (array: T[]) => U[] {
+        return array => array.map(this);
+    },
+    
+    applying<T, U>(this: (...args: T[]) => U): (array: T[]) => U {
+        return array => this(...array);
+    },
+    
+    timed<T extends Function>(this: T): T {
+        const timer = (...args) => {
+            console.time(this.name);
+            const returnValue = this(...args);
+            console.timeEnd(this.name);
+            return returnValue;
+        };
+        (<any> timer).name = "timing_" + this.name;
+        return <T> <any> timer;
+    },
+    
 });
 
 declare interface Array<T> {
@@ -145,6 +170,10 @@ declare interface Array<T> {
     clear(): void;
     
     remove(value: T): void;
+    
+    applyOn<T, U>(this: T[], func: (args: T[]) => U): U;
+    
+    callOn<T, U>(this: T[], func: (...args: T[]) => U): U;
     
 }
 
@@ -159,6 +188,14 @@ Object.defineImmutableProperties(Array.prototype, {
         if (i !== -1) {
             this.splice(i, 1);
         }
+    },
+    
+    applyOn<T, U>(this: T[], func: (args: T[]) => U): U {
+        return func(this);
+    },
+    
+    callOn<T, U>(this: T[], func: (...args: T[]) => U): U {
+        return func(...this);
     },
     
 });

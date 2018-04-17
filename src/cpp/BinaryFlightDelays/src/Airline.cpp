@@ -40,11 +40,19 @@ namespace r3d3 {
         buildIataMap();
     }
     
-    Airline::size_t Airline::numAirlines() noexcept {
+    Airline::size_t Airline::count() noexcept {
         return NUM_AIRLINES;
     }
     
+    Airline::size_t Airline::numAirlines() noexcept {
+        return count();
+    }
+    
     Airline::Airline(const Airline::size_t index) noexcept : _index(index) {}
+    
+    Airline Airline::of(Airline::size_t index) noexcept {
+        return Airline(index);
+    }
     
     Airline::Airline(std::string iataCode) noexcept : Airline(iataMap[iataCode]) {}
     

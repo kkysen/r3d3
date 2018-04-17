@@ -37,7 +37,7 @@ var plot = function() {
         plane.setAttribute("width", "10");
         plane.setAttribute("height", "10");
         plane.setAttribute("style", "fill:blue");
-
+        
 	      c.setAttribute("fill","lime");
 	      c.setAttribute("r",5);
 	      svg.appendChild(c);

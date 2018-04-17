@@ -25,7 +25,7 @@ by Team **r3d3**: Khyber Sen, Queenie Xiang, Anish Shenoy, and Kelly Wang
      The animation will go through all of the months of the year and
      a progress bar will show what month the animation is currently on.
      The user can hover over airports to see more data about them and
-     the number of flights that are leaving it.
+     the number of flightsPromise that are leaving it.
   
   3. Our visualization will show users where people in the United States
      are actually travelling to. It will also show how prone certain areas are to delays.

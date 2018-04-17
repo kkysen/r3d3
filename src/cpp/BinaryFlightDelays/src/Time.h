@@ -20,6 +20,8 @@ namespace r3d3 {
         
         explicit Time(i16 minuteOfDay) noexcept;
         
+        static Time of(i16 minuteOfDay) noexcept;
+        
         i16 minuteOfDay() const noexcept;
         
         i8 hourOfDay() const noexcept;

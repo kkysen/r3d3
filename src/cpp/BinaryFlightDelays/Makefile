@@ -7,13 +7,13 @@ BIN_FLAGS = -pg
 
 EMCC_DEV = -g3 -O0
 EMCC_PRODUCTION = -g0 -O3
-EMCC_FLAGS = $(FLAGS) --bind $(EMCC_DEV)
+EMCC_FLAGS = $(FLAGS) --bind $(EMCC_PRODUCTION)
 EMCC = emcc $(EMCC_FLAGS)
 WASM_EXT = js
 WASM_NAME = $(WASM_EXT)/CompactFlights.$(WASM_EXT)
 WASM_DEV = -s DEMANGLE_SUPPORT=1
 WASM_PRODUCTION = -s DEMANGLE_SUPPORT=0
-WASM_FLAGS = -s WASM=1 -s ALLOW_MEMORY_GROWTH=1 $(WASM_DEV)
+WASM_FLAGS = -s WASM=1 -s ALLOW_MEMORY_GROWTH=1 $(WASM_PRODUCTION)
 
 SRC_DIR = src
 BIN_DIR = bin
@@ -39,7 +39,7 @@ $(BIN_DIR)/o/%.o: $(SRC_DIR)/%.cpp
 bin_obj: bin_dir_exists $(BIN_OBJS)
 
 $(BIN_DIR)/$(BIN_NAME): $(BIN_OBJS)
-	$(GCC) -o $@ $^ $(OUT_FLAGS)
+	$(GCC) $(BIN_FLAGS) -o $@ $^
 
 cpp: bin_dir_exists $(BIN_DIR)/$(BIN_NAME)
 

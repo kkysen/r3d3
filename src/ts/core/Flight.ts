@@ -1,3 +1,4 @@
+import {Airline} from "./Airline";
 import {Airport} from "./Airport";
 import {Time} from "./Time";
 import {Date} from "./Date";

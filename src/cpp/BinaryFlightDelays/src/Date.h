@@ -10,16 +10,18 @@
 namespace r3d3 {
     
     class Date final {
-
+    
     private:
         
         static const u16 YEAR = 2015;
         
         u16 day;
-
+    
     public:
         
         explicit Date(u16 dayOfYear) noexcept;
+        
+        static Date of(u16 dayOfYear) noexcept;
         
         tm time() const noexcept;
         
@@ -28,7 +30,7 @@ namespace r3d3 {
         
         // [0, 364]
         u16 dayOfYear() const noexcept;
-
+    
     private:
         
         // [0, 365], 0 = March 1
@@ -36,7 +38,7 @@ namespace r3d3 {
         
         // [0, 11], 0 = March
         i32 offsetMonth() const noexcept;
-
+    
     public:
         
         // [0, 11]

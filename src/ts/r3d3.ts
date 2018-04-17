@@ -1,24 +1,44 @@
-import {flights} from "./core/Flights";
-import {postWasm, runAfterWasm} from "./core/wasm";
+import {flights, flightsPromise} from "./core/Flights";
+import {extendFlightsInterfaces, postWasm, runAfterWasm} from "./core/wasm";
+
+const timeDistances = (<any> window).timeDistances = function() {
+    console.log("running");
+    // let distance: number = 0;
+    // for (let i = 0; i < flights.size(); i++) {
+    //     console.log(i, distance);
+    //     const flightsInDay = flights.get(i);
+    //     for (let j = 0; j < flightsInDay.size(); j++) {
+    //         distance += flightsInDay.get(j).distance();
+    //     }
+    // }
+    console.log(flights.totalDistance());
+};
+
+const flightsMain = function() {
+    // const flightsInDay = flightsPromise.flightsInDay(1);
+    // console.log(flightsInDay);
+    const flight = flights.flight(0, 0);
+    console.log(flight);
+    console.log(flight.departure());
+    console.log(flight.departure().airport());
+    console.log(flight.departure().airport().name());
+    
+    timeDistances.timed()();
+};
+
+const preFlightsMain = function() {
+
+};
 
 const realMain = function() {
     console.log("realMain");
-    flights.get()
+    preFlightsMain();
+    flightsPromise.get()
         .then(flights => {
             console.log(flights);
-            // const flightsInDay = flights.flightsInDay(1);
-            // console.log(flightsInDay);
-            const flight = flights.flightInDay(0, 0);
-            console.log(flight);
-            console.log(flight.departure());
-            console.log(flight.departure().airport());
-            console.log(flight.departure().airport().name());
-            
-            let distance: number = 0;
-            for (let i = 0; i < 100; i++) {
-                distance += flights.flightInDay(0, i).distance();
-            }
-            console.log(distance);
+            // global flights will have loaded now
+            extendFlightsInterfaces();
+            flightsMain();
         });
 };
 

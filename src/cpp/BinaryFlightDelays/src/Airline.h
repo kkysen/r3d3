@@ -50,6 +50,8 @@ namespace r3d3 {
     public:
         
         static void init(std::istream& stream) noexcept;
+        
+        static size_t count() noexcept;
     
         static size_t numAirlines() noexcept;
 
@@ -62,6 +64,8 @@ namespace r3d3 {
     public:
     
         explicit Airline(size_t index) noexcept;
+        
+        static Airline of(size_t index) noexcept;
         
         explicit Airline(std::string iataCode) noexcept;
         

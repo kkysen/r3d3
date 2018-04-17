@@ -1,4 +1,4 @@
-import {GeoLocation} from "./Geolocation";
+import {GeoLocation} from "./GeoLocation";
 
 export interface Airport {
     

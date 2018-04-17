@@ -8,6 +8,10 @@ namespace r3d3 {
     
     Time::Time(const i16 minuteOfDay) noexcept : minute(minuteOfDay) {}
     
+    Time Time::of(i16 minuteOfDay) noexcept {
+        return Time(minuteOfDay);
+    }
+    
     i16 Time::minuteOfDay() const noexcept {
         return minute;
     }

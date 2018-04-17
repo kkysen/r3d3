@@ -37,4 +37,4 @@ add_executable(BinaryFlightDelays
         src/Airline.h
         src/util/Blob.cpp
         src/util/Blob.h
-        src/util/string_utils.cpp src/util/string_utils.h src/wasm.cpp)
+        src/util/string_utils.cpp src/util/string_utils.h src/wasm.cpp src/FlightsInDay.cpp src/FlightsInDay.h)

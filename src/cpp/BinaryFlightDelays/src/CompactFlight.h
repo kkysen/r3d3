@@ -115,7 +115,7 @@ namespace r3d3 {
         
         Time scheduledDuration() const noexcept;
         
-        double distance() const noexcept; // miles
+        double distance() const noexcept; // meters
         
         void serialize(std::streambuf& buf) const noexcept;
     

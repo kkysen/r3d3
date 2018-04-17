@@ -11,6 +11,7 @@
 
 #include "CompactFlight.h"
 #include "util/Blob.h"
+#include "FlightsInDay.h"
 
 namespace r3d3 {
     
@@ -18,31 +19,23 @@ namespace r3d3 {
 
     public:
     
-        using NumDaysInYear = u16;
+        using size_t = u16;
     
-        static const NumDaysInYear DAYS_IN_YEAR = 365; // for 2015
-    
-        using NumFlightsInDay = u16; // large enough for num flights on every day
-    
-        using FlightsInDay = std::vector<CompactFlight>;
-    
-        using AllFlights = std::array<FlightsInDay, DAYS_IN_YEAR>;
+        static const size_t DAYS_IN_YEAR = 365; // for 2015
     
     private:
-    
-        static NumFlightsInDay numFlightsInDay(FlightsInDay flightsInDay);
         
-    public:
-    
-        // TODO make this a pointer and use RAII
+        using AllFlights = std::array<FlightsInDay, DAYS_IN_YEAR>;
+        
         const AllFlights flights;
-        // TODO should Array flights be passed by reference, or will copying be elided?
     
-    private:
+        const std::size_t _numFlights;
+        
+        static std::size_t countNumFlights(AllFlights flights) noexcept;
         
         explicit Flights(AllFlights flights) noexcept;
         
-        static AllFlights toAllFlights(std::streambuf& buf) noexcept;
+        static AllFlights deserialize(std::streambuf& buf) noexcept;
         
         static AllFlights toAllFlights(std::vector<RawFlight> rawFlights) noexcept;
     
@@ -84,13 +77,19 @@ namespace r3d3 {
         // TODO
         // TODO make a separate FlightsInDay class
         
-        FlightsInDay flightsInDay(NumDaysInYear day) const noexcept;
-    
-        CompactFlight flightInDay(NumDaysInYear day, NumFlightsInDay flightNum) const noexcept;
+        size_t size() const noexcept;
         
-        int x() const noexcept {
-            return 5;
-        }
+        size_t numDays() const noexcept;
+        
+        std::size_t numFlights() const noexcept;
+        
+        FlightsInDay operator[](size_t day) const noexcept;
+        
+        FlightsInDay get(size_t day) const noexcept;
+        
+        CompactFlight flight(size_t day, size_t i) const noexcept;
+        
+        double totalDistance() const noexcept;
         
     };
     

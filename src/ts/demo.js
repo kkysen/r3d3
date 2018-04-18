@@ -142,8 +142,8 @@ var plot2 = function( lon, lat ){
     sizew = 57.0530243
     sizeh = 22.97928;
     
-    xc = ((lat+offlat)/sizew) * 961;
-    yc = ((lon+offlon)/sizeh) * 582;
+    xc = ((lat+offlat)/sizew) * width;
+    yc = ((lon+offlon)/sizeh) * height;
 
 
     console.log(xc)
@@ -152,7 +152,7 @@ var plot2 = function( lon, lat ){
     
     var circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
     circle.setAttribute("cx", xc);
-    circle.setAttribute("cy", yc);
+    circle.setAttribute("cy", height - yc);
     circle.setAttribute("r", 5);
     circle.setAttribute("fill", "green");
     svg.appendChild(circle);
@@ -160,7 +160,7 @@ var plot2 = function( lon, lat ){
     
 }
 
-//maine
+//michigan
 plot2( 45.07807, -83.56029);
 
 //binghamton
@@ -169,10 +169,13 @@ plot2( 42.20848, -75.97961);
 //buffalo
 plot2( 42.94052, -78.73217);
 
-plot2( 42.20848, -75.97961);
+//detroit
+plot2( 42.21206, -83.34884);
 
-plot2( 42.20848, -75.97961);
+//cleveland
+plot2( 41.41089, -81.84940);
 
 //dallas
 plot2(32.89595, -97.03720);
+
 //runAnimation();

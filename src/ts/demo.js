@@ -142,8 +142,8 @@ var plot2 = function( lon, lat ){
     sizew = 57.0530243
     sizeh = 22.97928;
     
-    xc = ((lat+offlat)/sizew) * 582;
-    yc = ((lon+offlon)/sizeh) * 961;
+    xc = ((lat+offlat)/sizew) * 961;
+    yc = ((lon+offlon)/sizeh) * 582;
 
 
     console.log(xc)

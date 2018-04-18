@@ -1,6 +1,12 @@
 # r3d3: Visualization of Airplane Flights and Delays in the US
 by Team **r3d3**: Khyber Sen, Queenie Xiang, Anish Shenoy, and Kelly Wang
 
+## How To Run
+
+  1. Clone this repository using the ```git clone https://github.com/kkysen/r3d3.git``` command.
+  2. Make sure that you have flask installed. Use the ```pip install flask``` command in your virtual environment
+  3. In a virtual environment, cd into the repository and run the ```make run``` command.
+  
 ## Data Sets
 
  * [Monthly Tourism Statistics - National Travel and Tourism Office](https://travel.trade.gov/research/monthly/departures/)

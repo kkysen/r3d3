@@ -1,8 +1,14 @@
-PORT = 8888
+install:
+	cd src/python; make
 
-all:
+install-compile:
 	npm install
-	# cors-server $(PORT)
-	touch running
-	cd src/python
-	python app.py
+
+wasm:
+	cd src/cpp/BinaryFlightDelays; make wasm
+
+js:
+	npm run watch
+
+run:
+	cd src/python; make

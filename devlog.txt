@@ -270,4 +270,4 @@ anishS - 2018-04-17 18:30:00
 To convert coordinates to pixels:
 Longitude: ((long + 124) / 57)) * width of picture
 
-Latitude: ((lat - 26) / 23) * height of picture 
+Latitude: ((lat - 26) / 23) * height of picture

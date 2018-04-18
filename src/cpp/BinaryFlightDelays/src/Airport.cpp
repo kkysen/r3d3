@@ -21,7 +21,7 @@ namespace r3d3 {
                 .city = fields[2],
                 .state = fields[3],
                 .country = fields[4],
-                .location = GeoLocation(latitude, longitude),
+                .location = GeoLocation(longitude, latitude),
         };
     }
     

@@ -133,9 +133,13 @@ EMSCRIPTEN_BINDINGS(r3d3) { // NOLINT
     
     emscripten::class_<GeoLocation>("GeoLocation")
             STATIC_METHOD(GeoLocation, of)
-            METHOD(latitude)
+            STATIC_METHOD(GeoLocation, setScaleContinentalUS)
             METHOD(longitude)
+            METHOD(latitude)
             METHOD(distanceTo)
+            METHOD(scale)
+            METHOD(x)
+            METHOD(y)
         //
             ;
     

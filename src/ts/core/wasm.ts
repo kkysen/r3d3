@@ -49,6 +49,8 @@ interface FlightsModule extends Module {
         
         of(latitude: number, longitude: number): GeoLocation;
         
+        setScaleContinentalUS(width: number, height: number): void;
+        
     };
     
     Date: {

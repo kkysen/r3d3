@@ -10,11 +10,11 @@
 
 namespace r3d3 {
     
-    GeoLocation::GeoLocation(const double latitude, const double longitude) noexcept
-            : _latitude(latitude), _longitude(longitude) {}
+    GeoLocation::GeoLocation(double longitude, double latitude) noexcept
+            : _longitude(longitude), _latitude(latitude) {}
     
-    GeoLocation GeoLocation::of(double latitude, double longitude) noexcept {
-        return GeoLocation(latitude, longitude);
+    GeoLocation GeoLocation::of(double longitude, double latitude) noexcept {
+        return GeoLocation(longitude, latitude);
     }
     
     double GeoLocation::latitude() const noexcept {
@@ -53,7 +53,7 @@ namespace r3d3 {
     double GeoLocation::haversine(const GeoLocation A, const GeoLocation B) noexcept {
         const double lat1 = A._latitude;
         const double lon1 = A._longitude;
-    
+        
         const double lat2 = B._latitude;
         const double lon2 = B._longitude;
         
@@ -79,7 +79,60 @@ namespace r3d3 {
     }
     
     std::ostream& operator<<(std::ostream& out, GeoLocation location) {
-        return out << "(" << location._latitude << ", " << location._longitude << ")";
+        return out << "(" << location._longitude << ", " << location._latitude << ")";
+    }
+    
+    //
+    
+    GeoLocation GeoLocation::operator-() const noexcept {
+        return GeoLocation(-_longitude, -_latitude);
+    }
+    
+    GeoLocation GeoLocation::operator+(GeoLocation location) const noexcept {
+        return GeoLocation(_longitude + location._longitude, _latitude + location._latitude);
+    }
+    
+    GeoLocation GeoLocation::operator*(GeoLocation location) const noexcept {
+        return GeoLocation(_longitude * location._longitude, _latitude * location._latitude);
+    }
+    
+    GeoLocation operator/(double scale, GeoLocation location) noexcept {
+        return GeoLocation(scale / location._longitude, scale / location._latitude);
+    }
+    
+    GeoLocation GeoLocation::scale() const noexcept {
+        return (*this + offset) * invSize * mapSize;
+    }
+    
+    double GeoLocation::x() const noexcept {
+        return scale()._longitude;
+    }
+    
+    double GeoLocation::y() const noexcept {
+        return scale()._latitude;
+    }
+    
+    GeoLocation GeoLocation::offset = GeoLocation(NAN, NAN);
+    GeoLocation GeoLocation::invSize = GeoLocation(NAN, NAN);
+    GeoLocation GeoLocation::mapSize = GeoLocation(NAN, NAN);
+    
+    void GeoLocation::setScale(GeoLocation offset, GeoLocation size, GeoLocation mapSize) noexcept {
+        GeoLocation::offset = offset;
+        GeoLocation::invSize = 1 / size;
+        GeoLocation::mapSize = mapSize;
+    }
+    
+    void GeoLocation::setScale(double width, double height,
+                               GeoLocation NW, GeoLocation NE,
+                               GeoLocation SW, GeoLocation SE) noexcept {
+        // TODO
+    }
+    
+    void GeoLocation::setScaleContinentalUS(double width, double height) noexcept {
+        GeoLocation offset(+124.456890, -26.044343);
+        GeoLocation size(+57.0530243, +22.97928);
+        GeoLocation mapSize(width, height);
+        setScale(offset, size, mapSize);
     }
     
 };

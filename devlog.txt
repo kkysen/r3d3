@@ -268,6 +268,6 @@ As of right now, I have them flying to some other arbitrary airport in the coord
 anishS - 2018-04-17 18:30:00
 
 To convert coordinates to pixels:
-Longitude: ((long + 124) / 157)) * width of picture
+Longitude: ((long + 124) / 57)) * width of picture
 
 Latitude: ((lat - 26) / 23) * height of picture 

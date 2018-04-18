@@ -91,7 +91,6 @@ void testCompactFlights() {
     p(flight.arrival().airport().name());
     p(flight.arrival().airport().location());
     p(flight.distance());
-    GeoLocation::once = true;
     p(flight.departure().airport().location() - flight.arrival().airport().location());
     
 //    double distance = 0;
@@ -106,6 +105,14 @@ void testCompactFlights() {
 //    p(distance);
     
     p(std::fixed << flights.totalDistance() << std::scientific);
+    
+    const auto seattle = flight.arrival().airport();
+    p(seattle.name());
+    
+    GeoLocation::setScaleContinentalUS(961.84375, 582.625);
+    p(std::fixed);
+    p(seattle.location());
+    p(seattle.location().scale());
 }
 
 void testDate() {

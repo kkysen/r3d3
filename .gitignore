@@ -10,3 +10,5 @@ node_modules/
 .gitignore
 
 cmake-build-debug/
+
+src/data/flight-delays/flights.csv

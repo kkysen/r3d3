@@ -265,9 +265,23 @@ When the fly button is clicked, the planes start flying
 As of right now, I have them flying to some other arbitrary airport in the coordinates array.
 
 ============================================================
+wangK - 2018-04-17 13:20:00
+
+Worked on converting latitudes and longitudes into pixels on svg canvas
+
+
+============================================================
 anishS - 2018-04-17 18:30:00
 
 To convert coordinates to pixels:
 Longitude: ((long + 124) / 57)) * width of picture
 
 Latitude: ((lat - 26) / 23) * height of picture
+
+============================================================
+wangK - 2018-04-17 23:30:00
+
+Worked on fixing the formula that converts lat/lon to pixels
+The points are scaled correctly relative to each other 
+but not relative to the picture of the map
+ 

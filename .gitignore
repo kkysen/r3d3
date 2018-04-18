@@ -12,3 +12,5 @@ node_modules/
 cmake-build-debug/
 
 src/data/flight-delays/flights.csv
+
+*.DS_Store

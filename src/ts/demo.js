@@ -28,7 +28,7 @@ console.log(svg);
 console.log(width);
 console.log(height);
 
-
+/*
 var plot = function() {
     for (i = 0; i < xCoordinates.length; i++) {
 	      var c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
@@ -134,5 +134,45 @@ fly.addEventListener("click",
   .attr("y", function(d,i){ return yCoordinates[(i+1) % yCoordinates.length] });
   })
 
-plot();
-runAnimation();
+*/
+
+var plot2 = function( lon, lat ){
+    offlat = 124.456890;
+    offlon = -24.044343;
+    sizew = 57.0530243
+    sizeh = 22.97928;
+    
+    xc = ((lat+offlat)/sizew) * 582;
+    yc = ((lon+offlon)/sizeh) * 961;
+
+
+    console.log(xc)
+    console.log(yc)
+    console.log("hh")
+    
+    var circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    circle.setAttribute("cx", xc);
+    circle.setAttribute("cy", yc);
+    circle.setAttribute("r", 5);
+    circle.setAttribute("fill", "green");
+    svg.appendChild(circle);
+
+    
+}
+
+//maine
+plot2( 45.07807, -83.56029);
+
+//binghamton
+plot2( 42.20848, -75.97961);
+
+//buffalo
+plot2( 42.94052, -78.73217);
+
+plot2( 42.20848, -75.97961);
+
+plot2( 42.20848, -75.97961);
+
+//dallas
+plot2(32.89595, -97.03720);
+//runAnimation();

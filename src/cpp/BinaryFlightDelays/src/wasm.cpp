@@ -34,7 +34,7 @@ EMSCRIPTEN_BINDINGS(r3d3) { // NOLINT
     #define METHOD(name) _METHOD(Flights, name)
     
     emscripten::class_<Flights>("Flights")
-            STATIC_METHOD(Flights, jsCreate)
+            STATIC_METHOD(Flights, create)
             METHOD(size)
             METHOD(numDays)
             METHOD(numFlights)
@@ -95,6 +95,7 @@ EMSCRIPTEN_BINDINGS(r3d3) { // NOLINT
     #define METHOD(name) _METHOD(Airline, name)
     
     emscripten::class_<Airline>("Airline")
+            STATIC_METHOD(Airline, load)
             STATIC_METHOD(Airline, count)
             STATIC_METHOD(Airline, numAirlines)
             STATIC_METHOD(Airline, of)
@@ -111,9 +112,11 @@ EMSCRIPTEN_BINDINGS(r3d3) { // NOLINT
     #define METHOD(name) _METHOD(Airport, name)
     
     emscripten::class_<Airport>("Airport")
+            STATIC_METHOD(Airport, load)
             STATIC_METHOD(Airport, count)
             STATIC_METHOD(Airport, numAirports)
             STATIC_METHOD(Airport, of)
+            STATIC_METHOD(Airport, ofIataCode)
             METHOD(index)
             METHOD(iataCode)
             METHOD(name)
@@ -137,9 +140,10 @@ EMSCRIPTEN_BINDINGS(r3d3) { // NOLINT
             METHOD(longitude)
             METHOD(latitude)
             METHOD(distanceTo)
-            METHOD(scale)
-            METHOD(x)
-            METHOD(y)
+            // don't work correctly
+//            METHOD(scale)
+//            METHOD(x)
+//            METHOD(y)
         //
             ;
     

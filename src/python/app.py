@@ -35,7 +35,8 @@ def make_file_data_route(filename, dir, prefix=""):
         "bin": "application/octet-stream",
         "csv": "text/csv",
         "wasm": "application/wasm",
-        "svg": "image/svg+xml"
+        "svg": "image/svg+xml",
+        "json": "application/json",
     }[extension]
     path = dir + "/" + filename
     if prefix:
@@ -46,7 +47,9 @@ def make_file_data_route(filename, dir, prefix=""):
 map(lambda filename: make_file_data_route(filename, "data/flight-delays", "data"),
     ["flights.bin", "airports.csv", "airlines.csv"])
 make_file_data_route("CompactFlights.wasm", "cpp/BinaryFlightDelays/wasm/js", "")
-make_file_data_route("map.svg", "data", "") 
+make_file_data_route("map.svg", "data", "")
+map(lambda filename: make_file_data_route(filename, "data/", "data"),
+    ["airports.json", "cities.json", "countries.json", "states.json"])
 
 
 # @app.route("/src/<path:filename>")

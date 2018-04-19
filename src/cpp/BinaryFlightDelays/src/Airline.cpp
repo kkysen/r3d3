@@ -4,6 +4,7 @@
 
 #include <vector>
 #include "Airline.h"
+#include "util/Blob.h"
 
 namespace r3d3 {
     
@@ -38,6 +39,10 @@ namespace r3d3 {
         initialized = true;
         AIRLINES = Airlines(stream, Fields::lineFilter, Fields::valueExtractor); // FIXME
         buildIataMap();
+    }
+    
+    void Airline::load(std::string data) noexcept {
+        Blob::load(data, init);
     }
     
     Airline::size_t Airline::count() noexcept {

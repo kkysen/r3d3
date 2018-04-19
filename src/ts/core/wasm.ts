@@ -2,68 +2,62 @@ import {Airport} from "./Airport";
 import {Airline} from "./Airline";
 import {DynamicEnum} from "./DynamicEnum";
 import {flights, Flights} from "./Flights";
-import {GeoLocation} from "./GeoLocation";
+import {CircleSelection, GeoLocation} from "./GeoLocation";
 import {Date} from "./Date";
 import {GetArray} from "./GetArray";
 import {Time} from "./Time";
+import {Map} from "./map";
 
 interface FlightsModule extends Module {
     
-    Flights: {
+    readonly Flights: {
         
-        create(flightsData: Uint8Array, airportsData: Uint8Array, airlinesData: Uint8Array): Flights;
-        
-        jsCreate(flightsData: Uint8Array, airportsData: Uint8Array, airlinesData: Uint8Array): Flights;
+        create(data: Uint8Array): Flights;
         
     };
     
-    Airport: {
-        
-        count(): number;
+    readonly Airport: DynamicEnum<Airport> & {
         
         numAirports(): number;
         
-        of(index: number): Airport;
-        
-        all(): Airport[];
-        
         airports(): Airport[];
+        
+        ofIataCode(iataCode: string): Airport;
+        
+        plotAll(): CircleSelection[];
         
     };
     
-    Airline: {
-        
-        count(): number;
+    readonly Airline: DynamicEnum<Airline> & {
         
         numAirlines(): number;
-        
-        of(index: number): Airline;
-        
-        all(): Airline[];
         
         airlines(): Airline[];
         
     };
     
-    GeoLocation: {
+    readonly GeoLocation: {
         
         of(latitude: number, longitude: number): GeoLocation;
         
+        // deprecated
         setScaleContinentalUS(width: number, height: number): void;
         
     };
     
-    Date: {
+    readonly Date: {
         
         of(dayOfYear: number): Date;
         
     };
     
-    Time: {
+    readonly Time: {
         
         of(minuteOfDay: number): Time;
         
     };
+    
+    readonly Map: Map,
     
 }
 
@@ -85,25 +79,20 @@ export const runAfterWasm = function <T>(func: () => T): Promise<T> {
 };
 
 const extendInterfaces = function(Module: FlightsModule) {
-    Module.Flights.create = function(flightsData: Uint8Array, airportsData: Uint8Array,
-                                     airlinesData: Uint8Array): Flights {
-        console.log("create", arguments);
-        return Module.Flights.jsCreate(flightsData, airportsData, airlinesData);
-    };
+    DynamicEnum.extendOn(Module.Airport, "airports");
+    DynamicEnum.extendOn(Module.Airline, "airlines");
     
-    DynamicEnum.addAllFunction(Module.Airport, "airports");
-    DynamicEnum.addAllFunction(Module.Airline, "airlines");
-    
+    (<any> Module).Map = Map;
+    GeoLocation.extendOn(Module.GeoLocation.of(0, 0));
 };
 
 export const extendFlightsInterfaces = function() {
-    GetArray.addToArrayFunction(flights);
-    GetArray.addToArrayFunction(flights.get(0));
+    GetArray.extendOn(flights);
+    GetArray.extendOn(flights.get(0));
 };
 
 export const postWasm = function(): void {
-    console.log("postWasm");
+    // console.log("postWasm");
     
     extendInterfaces(Module);
-    
 };

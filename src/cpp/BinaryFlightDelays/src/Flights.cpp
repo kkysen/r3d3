@@ -53,19 +53,9 @@ namespace r3d3 {
     Flights::Flights(const std::vector<RawFlight> rawFlights) noexcept
             : Flights(toAllFlights(rawFlights)) {}
     
-    Flights Flights::create(const Blob flightsData, const Blob airportsData, const Blob airlinesData) {
-        airlinesData.initUsingInputStream(Airline::init);
-        airportsData.initUsingInputStream(Airport::init);
-        std::stringbuf buf = flightsData.toStringBuf();
+    Flights Flights::create(std::string flightsData) noexcept {
+        std::stringbuf buf = Blob::ofString(flightsData).toStringBuf();
         return Flights(buf);
-    }
-    
-    Flights Flights::jsCreate(std::string flightsData, std::string airportsData, std::string airlinesData) {
-        return create(
-                Blob::ofString(flightsData),
-                Blob::ofString(airportsData),
-                Blob::ofString(airlinesData)
-        );
     }
     
     Flights::size_t Flights::size() const noexcept {

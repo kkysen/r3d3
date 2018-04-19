@@ -51,6 +51,8 @@ namespace r3d3 {
         
         static void init(std::istream& stream) noexcept;
         
+        static void load(std::string data) noexcept;
+        
         static size_t count() noexcept;
     
         static size_t numAirlines() noexcept;

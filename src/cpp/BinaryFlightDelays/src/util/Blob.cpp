@@ -23,7 +23,7 @@ namespace r3d3 {
 //    return std::istream(&buf);
 //}
     
-    void Blob::initUsingInputStream(void (* init)(std::istream&)) const noexcept {
+    void Blob::init(void (* init)(std::istream&)) const noexcept {
         std::stringbuf buf = toStringBuf();
         std::istream stream(&buf);
         init(stream);
@@ -34,6 +34,10 @@ namespace r3d3 {
                 .data = reinterpret_cast<const u8*>(data.c_str()),
                 .length = data.length(),
         };
+    }
+    
+    void Blob::load(const std::string data, void (* const init)(std::istream&)) noexcept {
+        ofString(data).init(init);
     }
     
 };

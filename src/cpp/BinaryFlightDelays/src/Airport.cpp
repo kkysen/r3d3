@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include "Airport.h"
+#include "util/Blob.h"
 
 namespace r3d3 {
     
@@ -60,6 +61,10 @@ namespace r3d3 {
         buildIataMap();
     }
     
+    void Airport::load(std::string data) noexcept {
+        Blob::load(data, init);
+    }
+    
     Airport::size_t Airport::count() noexcept {
         return NUM_AIRPORTS;
     }
@@ -75,6 +80,10 @@ namespace r3d3 {
     }
     
     Airport::Airport(std::string iataCode) noexcept : Airport(iataMap[iataCode]) {}
+
+    Airport Airport::ofIataCode(std::string iataCode) noexcept {
+        return Airport(iataCode);
+    }
     
     Airport::size_t Airport::index() const noexcept {
         return _index;

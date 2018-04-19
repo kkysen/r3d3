@@ -60,6 +60,8 @@ namespace r3d3 {
         
         static void init(std::istream& stream) noexcept;
     
+        static void load(std::string data) noexcept;
+    
         static size_t count() noexcept;
         
         static size_t numAirports() noexcept;
@@ -77,6 +79,8 @@ namespace r3d3 {
         static Airport of(size_t index) noexcept;
         
         explicit Airport(std::string iataCode) noexcept;
+
+        static Airport ofIataCode(std::string iataCode) noexcept;
         
         size_t index() const noexcept;
         

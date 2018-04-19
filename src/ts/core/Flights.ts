@@ -1,5 +1,6 @@
 import {cachedFetch, Fetch} from "../util/cachedFetch";
 import {SHA} from "../util/hash";
+import {Airport} from "./Airport";
 import {Flight} from "./Flight";
 import {FlightsInDay} from "./FlightsInDay";
 import {GetArray} from "./GetArray";
@@ -48,28 +49,36 @@ export const flightsPromise: FlightsSingleton = (function() {
         return hexCodes.join("");
     };
     
-    let i = 0;
+    // let i = 0;
     const asUint8Array = async function(response: Response): Promise<Uint8Array> {
-        console.log(response);
-        const j = ++i;
+        // console.log(response);
+        // const j = ++i;
         const buffer: Uint8Array = new Uint8Array(await response.arrayBuffer());
         // SHA._256.hash(buffer).then(hash => console.log(j, hash));
         return buffer;
     };
     
-    const loadFlights = function(_flights: Uint8Array, airports: Uint8Array, airlines: Uint8Array): Flights {
-        return flights = (<any> window).flights = Module.Flights.create(_flights, airports, airlines);
+    const loadFlights = function(_flights: Uint8Array): Flights {
+        return flights = (<any> window).flights = Module.Flights.create(_flights);
+    };
+    
+    const fetchData = function <T>(name: string, init: (Uint8Array) => T): Promise<T> {
+        return cachedFetch("data/" + name)
+            .then(asUint8Array)
+            .then(init);
     };
     
     const create = function(): Promise<Flights> {
-        Promise.all = Promise.all.bind(Promise);
-        return ["flights.bin", "airports.csv", "airlines.csv"]
-            .map(name => "data/" + name)
-            .map(url => cachedFetch(url))
-            .applyOn(Promise.all)
-            .then(asUint8Array.mapping())
-            .then(Promise.all)
-            .then(loadFlights.applying());
+        // load all data in parallel, but airlines and airports must be processed before flights
+        return Promise.all([
+            fetchData("airlines.csv", Module.Airline.load),
+            fetchData("airports.csv", Module.Airport.load.then(() => {
+                Airport.extend();
+                Module.Airport.plotAll();
+            })),
+            fetchData("flights.bin", data => data),
+        ])
+            .then(([airlines, airports, flights]) => loadFlights(flights));
     };
     
     let promise;

@@ -26,7 +26,9 @@ namespace r3d3 {
         
 //        std::istream toInputStream() const noexcept;
         
-        void initUsingInputStream(void (*init)(std::istream& stream)) const noexcept;
+        void init(void (* init)(std::istream& stream)) const noexcept;
+        
+        static void load(std::string data, void (* init)(std::istream& stream)) noexcept;
         
     };
     

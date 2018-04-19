@@ -1,6 +1,8 @@
 import {Range} from "../util/range";
 
-interface DynamicEnum<T> {
+export interface DynamicEnum<T> {
+    
+    load(data: Uint8Array): void;
     
     count(): number;
     
@@ -8,18 +10,31 @@ interface DynamicEnum<T> {
     
     all(): T[];
     
+    flush(): void;
+    
 }
 
 export const DynamicEnum = {
     
-    addAllFunction<T>(dynamicEnum: DynamicEnum<T>, alias?: string) {
+    extendOn<T>(dynamicEnum: DynamicEnum<T>, alias?: string) {
+        const cache = dynamicEnum as any as {_all: T[]};
+        
         dynamicEnum.all = function(): T[] {
-            return Range.new(dynamicEnum.count())
-                .map(i => dynamicEnum.of(i));
+            if (!cache._all) {
+                cache._all = Range.new(dynamicEnum.count())
+                    .map(i => dynamicEnum.of(i));
+            }
+            return cache._all;
         };
+        
         if (alias) {
             dynamicEnum[alias] = dynamicEnum.all;
         }
+        
+        dynamicEnum.flush = function(): void {
+            cache._all = undefined;
+        };
+        
     },
     
 };

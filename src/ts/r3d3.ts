@@ -1,8 +1,6 @@
 import {flights, flightsPromise} from "./core/Flights";
 import {createMap} from "./core/map";
 import {extendFlightsInterfaces, postWasm, runAfterWasm} from "./core/wasm";
-import {cachedFetch} from "./util/cachedFetch";
-import d3 = require("d3");
 
 const timeDistances = (<any> window).timeDistances = function() {
     console.log("running");
@@ -30,8 +28,6 @@ const flightsMain = function() {
 };
 
 const preFlightsMain = function() {
-    (<any> window).d3 = d3;
-    
     createMap();
 };
 

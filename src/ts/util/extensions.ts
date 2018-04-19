@@ -119,7 +119,7 @@ Object.defineImmutableProperties(Function, {
 
 declare interface Function {
     
-    then<T, U, V>(this: (arg: T) => T, nextFunc: (arg: U) => V): (arg: T) => V;
+    then<T, U, V>(this: (arg: T) => U, nextFunc: (arg: U) => V): (arg: T) => V;
     
     applyReturning<T>(this: (arg: T) => void): (arg: T) => T;
     
@@ -175,6 +175,10 @@ declare interface Array<T> {
     
     callOn<T, U>(this: T[], func: (...args: T[]) => U): U;
     
+    toObject<T>(this: [string, T][]): {[property: string]: T};
+    
+    toObject(this: [string, any][]): any;
+    
 }
 
 Object.defineImmutableProperties(Array.prototype, {
@@ -196,6 +200,14 @@ Object.defineImmutableProperties(Array.prototype, {
     
     callOn<T, U>(this: T[], func: (...args: T[]) => U): U {
         return func(...this);
+    },
+    
+    toObject(this: [string, any][]): any {
+        let o = {};
+        for (const [k, v] of this) {
+            o[k] = v;
+        }
+        return o;
     },
     
 });

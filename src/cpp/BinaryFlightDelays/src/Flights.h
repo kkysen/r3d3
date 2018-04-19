@@ -46,16 +46,10 @@ namespace r3d3 {
         explicit Flights(std::streambuf& buf) noexcept;
         
         explicit Flights(std::vector<RawFlight> rawFlights) noexcept;
-    
-    private:
-    
-        static Flights create(Blob flightsData, Blob airportsData, Blob airlinesData);
-        
-    public:
         
         // called by JS in fetch calls with Uint8Arrays
-        
-        static Flights jsCreate(std::string flightsData, std::string airportsData, std::string airlinesData);
+    
+        static Flights create(std::string flightsData) noexcept;
         
         /*
          * For performance sake, instead of using JS to iterate over the flights,

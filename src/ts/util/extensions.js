@@ -79,6 +79,22 @@ Object.defineImmutableProperties(Function.prototype, {
             return arg;
         };
     },
+    mapping() {
+        return array => array.map(this);
+    },
+    applying() {
+        return array => this(...array);
+    },
+    timed() {
+        const timer = (...args) => {
+            console.time(this.name);
+            const returnValue = this(...args);
+            console.timeEnd(this.name);
+            return returnValue;
+        };
+        timer.name = "timing_" + this.name;
+        return timer;
+    },
 });
 Object.defineImmutableProperties(Array.prototype, {
     clear() {
@@ -89,6 +105,19 @@ Object.defineImmutableProperties(Array.prototype, {
         if (i !== -1) {
             this.splice(i, 1);
         }
+    },
+    applyOn(func) {
+        return func(this);
+    },
+    callOn(func) {
+        return func(...this);
+    },
+    toObject() {
+        let o = {};
+        for (const [k, v] of this) {
+            o[k] = v;
+        }
+        return o;
     },
 });
 Object.defineImmutableProperties(Number, {

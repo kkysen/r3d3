@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.nativeFetch = window.fetch;
 const origin = window.location.origin;
 exports.corsServerUrl = "http://localhost:8888/";
 exports.getOrigin = function (url) {
@@ -11,7 +10,8 @@ exports.getOrigin = function (url) {
 exports.isSameOrigin = function (url) {
     return exports.getOrigin(url) === origin;
 };
-exports.fetch = window.fetch = function (input, init) {
+exports.fetch = function (input, init) {
+    console.log(arguments);
     const url = input instanceof Request ? input.url : input;
     if (!exports.isSameOrigin(url)) {
         const newUrl = exports.corsServerUrl + url;
@@ -22,6 +22,6 @@ exports.fetch = window.fetch = function (input, init) {
             input = newUrl;
         }
     }
-    return exports.nativeFetch(input, init);
+    return window.fetch(input, init);
 };
 //# sourceMappingURL=fetchCors.js.map

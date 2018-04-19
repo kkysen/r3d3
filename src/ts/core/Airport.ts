@@ -31,7 +31,7 @@ const extendOn = function(airport: Airport): void {
     prototype.extended = true;
     
     prototype.plot = function(this: Airport): CircleSelection | null {
-        const circle: CircleSelection | null = this.location().plot(5, "green");
+        const circle: CircleSelection | null = this.location().plot(5, "blue");
         return circle && circle.on("mouseover", () => {
             circle.append("title").text(this.iataCode() + ": " + this.name());
         });

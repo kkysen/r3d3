@@ -1,3 +1,4 @@
+import {renderFlights} from "./core/FlightRenderer";
 import {flights, flightsPromise} from "./core/Flights";
 import {createMap} from "./core/map";
 import {extendFlightsInterfaces, postWasm, runAfterWasm} from "./core/wasm";
@@ -25,6 +26,9 @@ const flightsMain = function() {
     console.log(flight.departure().airport().name());
     
     timeDistances.timed()();
+    
+    console.log(renderFlights);
+    (<any> window).flight = flights.flight(0, 0);
 };
 
 const preFlightsMain = function() {

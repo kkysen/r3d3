@@ -18,6 +18,10 @@ exports.GeoLocation = {
         };
         prototype.plot = function (radius, color) {
             const point = this.scale();
+            if (!point) {
+                // outside of US, like San Juan airport
+                return null;
+            }
             return svg.append("circle")
                 .attrs({
                 cx: point[0],

@@ -1,6 +1,7 @@
 import {Airport} from "./Airport";
 import {Airline} from "./Airline";
 import {DynamicEnum} from "./DynamicEnum";
+import {Flight} from "./Flight";
 import {flights, Flights} from "./Flights";
 import {CircleSelection, GeoLocation} from "./GeoLocation";
 import {Date} from "./Date";
@@ -89,6 +90,7 @@ const extendInterfaces = function(Module: FlightsModule) {
 export const extendFlightsInterfaces = function() {
     GetArray.extendOn(flights);
     GetArray.extendOn(flights.get(0));
+    Flight.extendOn(flights.flight(0, 0));
 };
 
 export const postWasm = function(): void {

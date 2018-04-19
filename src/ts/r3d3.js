@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const FlightRenderer_1 = require("./core/FlightRenderer");
 const Flights_1 = require("./core/Flights");
 const map_1 = require("./core/map");
 const wasm_1 = require("./core/wasm");
@@ -24,6 +25,7 @@ const flightsMain = function () {
     console.log(flight.departure().airport());
     console.log(flight.departure().airport().name());
     timeDistances.timed()();
+    console.log(FlightRenderer_1.renderFlights);
 };
 const preFlightsMain = function () {
     map_1.createMap();

@@ -16,11 +16,12 @@ export const GetArray = {
     
     extendOn<T>(getArray: GetArray<T>): void {
         const prototype = Object.getPrototypeOf(getArray);
-        if (prototype.toArray) {
+        if (prototype.getArrayExtended) {
             return;
         }
+        prototype.getArrayExtended = true;
         
-        prototype.coordinates = function(this: GetArray<T>): T[] {
+        prototype.toArray = function(this: GetArray<T>): T[] {
             const cache = this as any as {_array: T[]};
             if (!cache._array) {
                 cache._array = Range.new(this.size())

@@ -16,7 +16,7 @@ export interface GeoLocation {
     
     scale(): Point;
     
-    plot(radius: number, color: string): CircleSelection | null;
+    plot(radius: number, color?: string): CircleSelection | null;
 
 }
 
@@ -40,7 +40,7 @@ export const GeoLocation = {
             return projection(this.coordinates());
         };
         
-        prototype.plot = function(this: GeoLocation, radius: number, color: string): CircleSelection | null {
+        prototype.plot = function(this: GeoLocation, radius: number, color?: string): CircleSelection | null {
             const point: Point = this.scale();
             if (!point) {
                 // outside of US, like San Juan airport

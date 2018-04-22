@@ -7,7 +7,7 @@ import {CircleSelection, GeoLocation} from "./GeoLocation";
 import {Date} from "./Date";
 import {GetArray} from "./GetArray";
 import {Time} from "./Time";
-import {Map} from "./map";
+import {Map} from "./Map";
 
 export type FlightClass = {
     

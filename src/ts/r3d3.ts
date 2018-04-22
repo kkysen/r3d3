@@ -1,6 +1,6 @@
 import {renderFlights} from "./core/FlightRenderer";
 import {flights, flightsPromise} from "./core/Flights";
-import {createMap} from "./core/map";
+import {createMap} from "./core/Map";
 import {extendFlightsInterfaces, postWasm, runAfterWasm} from "./core/wasm";
 import d3 = require("d3");
 

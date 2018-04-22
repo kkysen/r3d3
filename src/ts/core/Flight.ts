@@ -3,13 +3,13 @@ import {ReattachingBuffer} from "../util/ReattachingBuffer";
 import {Airline} from "./Airline";
 import {Airport} from "./Airport";
 import {Color} from "./Color";
-import {GeoLocation} from "./GeoLocation";
+import {CircleSelection, GeoLocation} from "./GeoLocation";
 import {Time} from "./Time";
 import {Date} from "./Date";
 import {Range} from "../util/range";
 import {Vector} from "./Vector";
 import {FlightClass, Module} from "./wasm";
-import {Map} from "./map";
+import {Map} from "./Map";
 import d3 = require("d3");
 
 export const ProjectionMarshaller: {
@@ -35,13 +35,13 @@ export const ProjectionMarshaller: {
         
         const wasmProjection = function(): void {
             const projectedLocation: ProjectedLocation = reattachingProjectedLocation.get();
-            console.log(projectedLocation);
+            // console.log(projectedLocation);
             const point: Point = jsProjection(projectedLocation);
             if (point) {
-                console.log(point);
+                // console.log(point);
                 projectedLocation[0] = point[0];
                 projectedLocation[1] = point[1];
-                console.log(projectedLocation);
+                // console.log(projectedLocation);
             } else {
                 console.log(projectedLocation + " is not in US");
                 projectedLocation[0] = projectedLocation[1] = NaN;
@@ -218,9 +218,9 @@ export interface Flight {
     
     render(): void;
     
-    wasmRender(): void;
+    wasmRender(): Transition<SVGCircleElement, any, SVGSVGElement, any>;
     
-    jsRender(): void;
+    jsRender(): Transition<SVGCircleElement, any, SVGSVGElement, any>;
     
 }
 
@@ -251,9 +251,10 @@ export const Flight = {
                 .styleTween("opacity", state.opacityTween(flight))
                 .attrTween("cx", state.cxTween)
                 .attrTween("cy", state.cyTween)
-                .attrTween("fill", state.colorTween);
+                .attrTween("fill", state.colorTween)
+                .remove();
         };
-    
+        
         const mixColors = function(color1: Color, color2: Color, weight: number): string {
             if (weight < 0) {
                 weight = 0;
@@ -269,7 +270,7 @@ export const Flight = {
                 + ")";
         };
         
-        prototype.jsRender = function(this: Flight): void {
+        prototype.jsRender = function(this: Flight): Transition<SVGCircleElement, any, SVGSVGElement, any> {
             const departure: Departure = this.departure();
             const arrival: Arrival = this.arrival();
             
@@ -308,7 +309,7 @@ export const Flight = {
             const durationScale = 25;
             const minOpacity = .5;
             const plot = start.plot(5);
-            plot.attrs({fill: startColor})
+            return plot.attrs({fill: startColor})
                 .transition()
                 .ease(d3.easeLinear)
                 .duration(duration * durationScale)
@@ -322,7 +323,18 @@ export const Flight = {
                 });
         };
         
-        prototype.render = prototype.jsRender;
+        const showAirportDelay = function(side: FlightSide): void {
+            const svg: CircleSelection = side.airport().svg;
+            const delay: number = side.delay().minuteOfDay();
+            // TODO
+        };
+        
+        prototype.render = function(this: Flight): void {
+            this.jsRender()
+                .on("start", () => showAirportDelay(this.departure()))
+                .on("end", () => showAirportDelay(this.arrival()))
+                .remove();
+        };
     },
     
 };

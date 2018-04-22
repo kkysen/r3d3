@@ -1,4 +1,3 @@
-import {cachedFetch} from "../util/cachedFetch";
 import {CircleSelection, GeoLocation} from "./GeoLocation";
 import {Module} from "./wasm";
 
@@ -20,6 +19,8 @@ export interface Airport {
     
     plot(): CircleSelection | null;
     
+    svg: CircleSelection;
+    
 }
 
 const extendOn = function(airport: Airport): void {
@@ -32,7 +33,11 @@ const extendOn = function(airport: Airport): void {
     
     prototype.plot = function(this: Airport): CircleSelection | null {
         const circle: CircleSelection | null = this.location().plot(5, "blue");
-        return circle && circle.on("mouseover", () => {
+        if (!circle) {
+            return;
+        }
+        this.svg = circle;
+        return circle.on("mouseover", () => {
             circle.append("title").text(this.iataCode() + ": " + this.name());
         });
     };

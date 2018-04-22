@@ -1,5 +1,5 @@
 import {GeoProjection} from "d3-geo";
-import {Map} from "./map";
+import {Map} from "./Map";
 import {Selection} from "d3-selection";
 
 export type CircleSelection = Selection<SVGCircleElement, any, SVGSVGElement, any>;

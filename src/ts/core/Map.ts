@@ -44,7 +44,7 @@ export const createMap = function() {
         width: 1000,
         height: 1000,
     });
-
+    
     
     const name = "states";
     
@@ -59,7 +59,8 @@ export const createMap = function() {
             .append("path")
             .attrs({
                 d: path,
-                stroke: "white",
+                fill: "white",
+                stroke: "black",
             })
         );
     

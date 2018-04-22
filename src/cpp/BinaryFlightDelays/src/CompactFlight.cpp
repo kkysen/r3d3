@@ -27,8 +27,8 @@ namespace r3d3 {
             _state(start) {
         _state.opacity = 1;
         sharedState = _state;
-        pf();
-        p(_state);
+//        pf();
+//        p(_state);
     }
     
     CompactFlight::Interpolator::State CompactFlight::Interpolator::sharedState = {
@@ -86,7 +86,7 @@ namespace r3d3 {
         interpolate(time);
         time += tick();
         if (u32(time * _duration) % 100 == 0) {
-            p(_state);
+//            p(_state);
         }
     }
     
@@ -251,10 +251,10 @@ namespace r3d3 {
     
     Vector CompactFlight::project(GeoLocation location) noexcept {
         _projectedLocation = location;
-        pf();
-        p(_projectedLocation);
+//        pf();
+//        p(_projectedLocation);
         projection();
-        p(_projectedLocation);
+//        p(_projectedLocation);
         return {
                 .x = static_cast<f32>(_projectedLocation.longitude()),
                 .y = static_cast<f32>(_projectedLocation.latitude())

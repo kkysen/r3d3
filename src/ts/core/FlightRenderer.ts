@@ -1,36 +1,61 @@
-import {min} from "d3-array";
 import {Flight, FlightSide} from "./Flight";
 import {flights} from "./Flights";
 
-export interface FlightFilter {
+type BasicFlightFilter = (flight: Flight) => boolean;
+
+export interface FlightFilter extends BasicFlightFilter {
     
-    (flight: Flight): boolean;
+    index: number;
     
-    filters: ((flight: Flight) => boolean)[];
-    
-    add(filter: (flight: Flight) => boolean): void;
+    remove(): void;
     
 }
 
-export const flightFilter: FlightFilter = (function() {
-    const flightFilter: FlightFilter = <FlightFilter> function(flight: Flight): boolean {
-        for (const filter of flightFilter.filters) {
+export interface FlightFilters {
+    
+    (flight: Flight): boolean;
+    
+    filters: FlightFilter[];
+    
+    add(filter: BasicFlightFilter): FlightFilter;
+    
+}
+
+export const flightFilters: FlightFilters = (function() {
+    const filters = [];
+    
+    const flightFilter: FlightFilters = <FlightFilters> function(flight: Flight): boolean {
+        for (const filter of filters) {
             if (!filter(flight)) {
                 return false;
             }
         }
         return true;
     };
-    flightFilter.filters = [];
-    flightFilter.add = function(filter: (flight: Flight) => boolean): void {
-        flightFilter.filters.push(filter);
+    
+    flightFilter.filters = filters;
+    
+    flightFilter.add = function(rawFilter: BasicFlightFilter): FlightFilter {
+        const filter: FlightFilter = <FlightFilter> rawFilter;
+        filter.index = filters.length;
+        
+        filter.remove = function(): void {
+            filters.splice(filter.index, 1);
+            for (let i = filter.index; i < filters.length; i++) {
+                filters[i].index--;
+            }
+        };
+    
+        filters.push(filter);
+        return filter;
     };
+    
     return flightFilter;
 })();
 
-(<any> window).flightFilter = flightFilter;
+(<any> window).flightFilters = flightFilters;
 
-flightFilter.add(function inUS(flight: Flight): boolean {
+flightFilters.add(function inUS(flight: Flight): boolean {
     const inUS = function(side: FlightSide): boolean {
         return !!side.airport().location().scale();
     };
@@ -54,7 +79,7 @@ export const renderFlightsInDay = async function(day: number): Promise<void> {
         await animationFramePromise();
         console.log(Math.floor(minute / 60) + ":" + minute % 60);
         while (continueRenderingFlights && flight && flight.departure().time().minuteOfDay() === minute) {
-            if (flightFilter(flight)) {
+            if (flightFilters(flight)) {
                 flight.render();
             }
             flight = flightsInDay[++flightNum];

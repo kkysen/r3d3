@@ -257,6 +257,12 @@ an interpreter/compiler of sorts implemented in Wasm.
 Instead, we can just pass a JS function to the Wasm code in those cases.
 
 ============================================================
+xiangQ - 2018-04-18 0:30:00
+
+Added a simple demo representing the final product of our project
+The demo includes a svg file of the US map and dots representing some airports in the United States 
+
+============================================================
 anishS - 2018-04-12 22:22:00
 
 Added some D3 animations. I'm using small, blue svg rectangles to represent planes.
@@ -285,3 +291,10 @@ Worked on fixing the formula that converts lat/lon to pixels
 The points are scaled correctly relative to each other 
 but not relative to the picture of the map
  
+============================================================
+xiangQ - 2018-04-18 0:30:00
+
+Added json files of data (coordinates) used for drawing the US map and airports
+Drew map of the US states from coordinates using topojson
+Added dots representing airports onto the map
+Tried to match the dots to the map (scaling is a little off)

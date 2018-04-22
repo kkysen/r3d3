@@ -42,6 +42,13 @@ export const createMap = function() {
         width: 1000,
         height: 1000,
     });
+
+    svg
+	.attr("xmlns", "http://www.w3.org/2000/svg")
+	.attr("xmlns:xlink", "https://upload.wikimedia.org/wikipedia/commons/6/64/Plane_font_awesome.svg")
+	.attr("width", "32")
+	.attr("height", "32")
+	.attr("viewbox", "0 0 32 32");
     
     const name = "states";
     

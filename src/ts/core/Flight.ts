@@ -286,7 +286,7 @@ export const Flight = {
             const startColor = mixColors(RED, GREEN, startDelay / 30);
             const endColor = mixColors(RED, GREEN, endDelay / 30);
             
-            console.log({
+            const log = {
                 departure: departure,
                 arrival: arrival,
                 duration: duration,
@@ -296,7 +296,8 @@ export const Flight = {
                 endDelay: endDelay,
                 startColor: startColor,
                 endColor: endColor,
-            });
+            };
+            // console.log(log);
             
             if (!start.scale() || !endPoint) {
                 return;

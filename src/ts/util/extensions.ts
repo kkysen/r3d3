@@ -184,6 +184,8 @@ declare interface Array<T> {
     
     toObject(this: [string, any][]): any;
     
+    sortBy<T, U>(this: T[], key: (t: T) => U): T[];
+    
 }
 
 Object.defineImmutableProperties(Array.prototype, {
@@ -214,6 +216,11 @@ Object.defineImmutableProperties(Array.prototype, {
         }
         return o;
     },
+    
+    sortBy<T, U extends number>(this: T[], key: (t: T) => U): T[] {
+        this.sort((a, b) => key(a) - key(b));
+        return this;
+    }
     
 });
 

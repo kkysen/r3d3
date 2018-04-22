@@ -4,6 +4,7 @@ const FlightRenderer_1 = require("./core/FlightRenderer");
 const Flights_1 = require("./core/Flights");
 const map_1 = require("./core/map");
 const wasm_1 = require("./core/wasm");
+const d3 = require("d3");
 const timeDistances = window.timeDistances = function () {
     console.log("running");
     // let distance: number = 0;
@@ -26,6 +27,7 @@ const flightsMain = function () {
     console.log(flight.departure().airport().name());
     timeDistances.timed()();
     console.log(FlightRenderer_1.renderFlights);
+    window.flight = Flights_1.flights.flight(0, 0);
 };
 const preFlightsMain = function () {
     map_1.createMap();
@@ -42,6 +44,7 @@ const realMain = function () {
     });
 };
 exports.main = function () {
-    [wasm_1.postWasm, realMain].forEach(wasm_1.runAfterWasm);
+    window.d3 = d3;
+    wasm_1.postWasm.then(realMain);
 };
 //# sourceMappingURL=r3d3.js.map

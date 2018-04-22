@@ -26,8 +26,6 @@ namespace r3d3 {
         
     };
     
-    std::ostream& operator<<(std::ostream& out, NumberRange range) noexcept;
-    
 };
 
 #include "NumberRange.tcc"

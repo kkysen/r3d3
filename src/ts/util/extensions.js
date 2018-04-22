@@ -4,10 +4,15 @@ const immutableDescriptor = {
     configurable: false,
 };
 const defineSharedProperties = function (obj, sharedDescriptor, propertyValues) {
-    const properties = {};
-    for (const value in propertyValues) {
-        if (propertyValues.hasOwnProperty(value)) {
-            properties[value] = Object.assign({ value: propertyValues[value] }, sharedDescriptor);
+    const properties = Object.getOwnPropertyDescriptors(propertyValues);
+    for (const propertyName in properties) {
+        if (properties.hasOwnProperty(propertyName)) {
+            let property = properties[propertyName];
+            property = Object.assign(property, sharedDescriptor);
+            if (property.get || property.set) {
+                delete property.writable;
+            }
+            properties[propertyName] = property;
         }
     }
     Object.defineProperties(obj, properties);

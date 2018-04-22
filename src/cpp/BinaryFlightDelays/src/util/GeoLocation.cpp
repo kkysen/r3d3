@@ -3,37 +3,37 @@
 //
 
 #include "GeoLocation.h"
-#include "r3d3.h"
+#include "../r3d3.h"
 
 #include <cmath>
 #include <iostream>
 
 namespace r3d3 {
     
-    GeoLocation::GeoLocation(double longitude, double latitude) noexcept
+    GeoLocation::GeoLocation(f64 longitude, f64 latitude) noexcept
             : _longitude(longitude), _latitude(latitude) {}
     
-    GeoLocation GeoLocation::of(double longitude, double latitude) noexcept {
+    GeoLocation GeoLocation::of(f64 longitude, f64 latitude) noexcept {
         return GeoLocation(longitude, latitude);
     }
     
-    double GeoLocation::latitude() const noexcept {
+    f64 GeoLocation::latitude() const noexcept {
         return _latitude;
     }
     
-    double GeoLocation::longitude() const noexcept {
+    f64 GeoLocation::longitude() const noexcept {
         return _longitude;
     }
     
-    const double PI = M_PI;
+    const f64 PI = M_PI;
     
-    double degToRad(const double degrees) noexcept {
+    f64 degToRad(const f64 degrees) noexcept {
         return degrees * PI / 180;
     }
     
-    const double EARTH_RADIUS = 6371e3;
+    const f64 EARTH_RADIUS = 6371e3;
     
-    double square(const double x) noexcept {
+    f64 square(const f64 x) noexcept {
         return x * x;
     }
     
@@ -50,36 +50,37 @@ namespace r3d3 {
      * @param B location B
      * @return the distance between A and B (in meters)
      */
-    double GeoLocation::haversine(const GeoLocation A, const GeoLocation B) noexcept {
-        const double lat1 = A._latitude;
-        const double lon1 = A._longitude;
+    f64 GeoLocation::haversine(const GeoLocation A, const GeoLocation B) noexcept {
+        const f64 lat1 = A._latitude;
+        const f64 lon1 = A._longitude;
         
-        const double lat2 = B._latitude;
-        const double lon2 = B._longitude;
+        const f64 lat2 = B._latitude;
+        const f64 lon2 = B._longitude;
         
-        const double phi1 = degToRad(lat1);
-        const double phi2 = degToRad(lat2);
-        const double deltaPhi = phi2 - phi1; // TODO check
-        const double deltaLambda = degToRad(lon2 - lon1);
+        const f64 phi1 = degToRad(lat1);
+        const f64 phi2 = degToRad(lat2);
+        const f64 deltaPhi = phi2 - phi1; // TODO check
+        const f64 deltaLambda = degToRad(lon2 - lon1);
         
-        const double a = square(sin(deltaPhi * 0.5))
+        const f64 a = square(sin(deltaPhi * 0.5))
                          + cos(phi1) * cos(phi2) * square(sin(deltaLambda * 0.5));
-        const double c = 2 * atan2(sqrt(a), sqrt(1 - a));
-        const double R = EARTH_RADIUS;
-        const double d = R * c;
+        const f64 c = 2 * atan2(sqrt(a), sqrt(1 - a));
+        const f64 R = EARTH_RADIUS;
+        const f64 d = R * c;
         return d;
     }
     
-    double GeoLocation::distanceTo(const GeoLocation location) const noexcept {
+    f64 GeoLocation::distanceTo(const GeoLocation location) const noexcept {
         return haversine(*this, location);
     }
     
-    double GeoLocation::operator-(const GeoLocation location) const noexcept {
+    f64 GeoLocation::operator-(const GeoLocation location) const noexcept {
         return distanceTo(location);
     }
     
     std::ostream& operator<<(std::ostream& out, GeoLocation location) {
-        return out << "(" << location._longitude << ", " << location._latitude << ")";
+        // "backwards" order b/c that's how latitude, longitude are normally written
+        return out << "(" << location._latitude << ", " << location._longitude << ")";
     }
     
     //
@@ -96,7 +97,7 @@ namespace r3d3 {
         return GeoLocation(_longitude * location._longitude, _latitude * location._latitude);
     }
     
-    GeoLocation operator/(double scale, GeoLocation location) noexcept {
+    GeoLocation operator/(f64 scale, GeoLocation location) noexcept {
         return GeoLocation(scale / location._longitude, scale / location._latitude);
     }
     
@@ -104,11 +105,11 @@ namespace r3d3 {
         return (*this + offset) * invSize * mapSize;
     }
     
-    double GeoLocation::x() const noexcept {
+    f64 GeoLocation::x() const noexcept {
         return scale()._longitude;
     }
     
-    double GeoLocation::y() const noexcept {
+    f64 GeoLocation::y() const noexcept {
         return scale()._latitude;
     }
     
@@ -122,13 +123,13 @@ namespace r3d3 {
         GeoLocation::mapSize = mapSize;
     }
     
-    void GeoLocation::setScale(double width, double height,
+    void GeoLocation::setScale(f64 width, f64 height,
                                GeoLocation NW, GeoLocation NE,
                                GeoLocation SW, GeoLocation SE) noexcept {
         // TODO
     }
     
-    void GeoLocation::setScaleContinentalUS(double width, double height) noexcept {
+    void GeoLocation::setScaleContinentalUS(f64 width, f64 height) noexcept {
         GeoLocation offset(+124.456890, -26.044343);
         GeoLocation size(+57.0530243, +22.97928);
         GeoLocation mapSize(width, height);

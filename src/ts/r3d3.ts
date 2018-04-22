@@ -2,6 +2,7 @@ import {renderFlights} from "./core/FlightRenderer";
 import {flights, flightsPromise} from "./core/Flights";
 import {createMap} from "./core/map";
 import {extendFlightsInterfaces, postWasm, runAfterWasm} from "./core/wasm";
+import d3 = require("d3");
 
 const timeDistances = (<any> window).timeDistances = function() {
     console.log("running");
@@ -48,5 +49,6 @@ const realMain = function() {
 };
 
 export const main = function() {
-    [postWasm, realMain].forEach(runAfterWasm);
+    (<any> window).d3 = d3;
+    postWasm.then(realMain);
 };

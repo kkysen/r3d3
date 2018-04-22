@@ -102,12 +102,6 @@ namespace r3d3 {
         
     };
     
-    std::ostream& operator<<(std::ostream& out, RawFlight::Field field) noexcept;
-    
-    std::ostream& operator<<(std::ostream& out, RawFlight::AnalyzedField analyzedField) noexcept;
-    
-    std::ostream& operator<<(std::ostream& out, std::vector<RawFlight::AnalyzedField> analyzedFields) noexcept;
-    
 };
 
 

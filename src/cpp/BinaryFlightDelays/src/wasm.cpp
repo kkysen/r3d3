@@ -22,19 +22,17 @@ EMSCRIPTEN_BINDINGS(r3d3) { // NOLINT
     using Flight = CompactFlight;
     
     #define PROPERTY(type, class, name) .type(#name, &class::name)
-    
-    #define _METHOD(class, name) PROPERTY(function, class, name)
-    
-    #define STATIC_METHOD(class, name) PROPERTY(class_function, class, name)
-    
     #define MEMBER(class, name) PROPERTY(property, class, name)
+    #define _METHOD(class, name) PROPERTY(function, class, name)
+    #define _STATIC_METHOD(class, name) PROPERTY(class_function, class, name)
     
     //
     
     #define METHOD(name) _METHOD(Flights, name)
+    #define STATIC_METHOD(name) _STATIC_METHOD(Flights, name)
     
     emscripten::class_<Flights>("Flights")
-            STATIC_METHOD(Flights, create)
+            STATIC_METHOD(create)
             METHOD(size)
             METHOD(numDays)
             METHOD(numFlights)
@@ -45,10 +43,12 @@ EMSCRIPTEN_BINDINGS(r3d3) { // NOLINT
             ;
     
     #undef METHOD
+    #undef STATIC_METHOD
     
     //
     
     #define METHOD(name) _METHOD(FlightsInDay, name)
+    #define STATIC_METHOD(name) _STATIC_METHOD(FlightsInDay, name)
     
     emscripten::class_<FlightsInDay>("FlightsInDay")
             METHOD(size)
@@ -58,10 +58,12 @@ EMSCRIPTEN_BINDINGS(r3d3) { // NOLINT
             ;
     
     #undef METHOD
+    #undef STATIC_METHOD
     
     //
     
     #define METHOD(name) _METHOD(Flight, name)
+    #define STATIC_METHOD(name) _STATIC_METHOD(Flight, name)
     
     emscripten::class_<Flight>("Flight")
             METHOD(date)
@@ -71,14 +73,21 @@ EMSCRIPTEN_BINDINGS(r3d3) { // NOLINT
             METHOD(scheduledDuration)
             METHOD(distance)
             METHOD(arrival)
+            STATIC_METHOD(projectedLocationPointer)
+            STATIC_METHOD(projectedLocationSize)
+            STATIC_METHOD(setProjectionPointer)
+            METHOD(isRenderable)
+            METHOD(interpolator)
         //
             ;
     
     #undef METHOD
+    #undef STATIC_METHOD
     
     //
     
     #define METHOD(name) _METHOD(Flight::Side, name)
+    #define STATIC_METHOD(name) _STATIC_METHOD(Flight::Side, name)
     
     emscripten::class_<Flight::Side>("FlightSide")
             METHOD(time)
@@ -89,16 +98,35 @@ EMSCRIPTEN_BINDINGS(r3d3) { // NOLINT
             ;
     
     #undef METHOD
+    #undef STATIC_METHOD
+    
+    //
+    
+    #define METHOD(name) _METHOD(Flight::Interpolator, name)
+    #define STATIC_METHOD(name) _STATIC_METHOD(Flight::Interpolator, name)
+    
+    emscripten::class_<Flight::Interpolator>("FlightInterpolator")
+            STATIC_METHOD(statePointer)
+            STATIC_METHOD(stateSize)
+            METHOD(duration)
+            METHOD(interpolate)
+            METHOD(update)
+        //
+            ;
+    
+    #undef METHOD
+    #undef STATIC_METHOD
     
     //
     
     #define METHOD(name) _METHOD(Airline, name)
+    #define STATIC_METHOD(name) _STATIC_METHOD(Airline, name)
     
     emscripten::class_<Airline>("Airline")
-            STATIC_METHOD(Airline, load)
-            STATIC_METHOD(Airline, count)
-            STATIC_METHOD(Airline, numAirlines)
-            STATIC_METHOD(Airline, of)
+            STATIC_METHOD(load)
+            STATIC_METHOD(count)
+            STATIC_METHOD(numAirlines)
+            STATIC_METHOD(of)
             METHOD(index)
             METHOD(iataCode)
             METHOD(name)
@@ -106,17 +134,19 @@ EMSCRIPTEN_BINDINGS(r3d3) { // NOLINT
             ;
     
     #undef METHOD
+    #undef STATIC_METHOD
     
     //
     
     #define METHOD(name) _METHOD(Airport, name)
+    #define STATIC_METHOD(name) _STATIC_METHOD(Airport, name)
     
     emscripten::class_<Airport>("Airport")
-            STATIC_METHOD(Airport, load)
-            STATIC_METHOD(Airport, count)
-            STATIC_METHOD(Airport, numAirports)
-            STATIC_METHOD(Airport, of)
-            STATIC_METHOD(Airport, ofIataCode)
+            STATIC_METHOD(load)
+            STATIC_METHOD(count)
+            STATIC_METHOD(numAirports)
+            STATIC_METHOD(of)
+            STATIC_METHOD(ofIataCode)
             METHOD(index)
             METHOD(iataCode)
             METHOD(name)
@@ -129,14 +159,15 @@ EMSCRIPTEN_BINDINGS(r3d3) { // NOLINT
             ;
     
     #undef METHOD
+    #undef STATIC_METHOD
     
     //
     
     #define METHOD(name) _METHOD(GeoLocation, name)
+    #define STATIC_METHOD(name) _STATIC_METHOD(GeoLocation, name)
     
     emscripten::class_<GeoLocation>("GeoLocation")
-            STATIC_METHOD(GeoLocation, of)
-            STATIC_METHOD(GeoLocation, setScaleContinentalUS)
+            STATIC_METHOD(of)
             METHOD(longitude)
             METHOD(latitude)
             METHOD(distanceTo)
@@ -148,13 +179,15 @@ EMSCRIPTEN_BINDINGS(r3d3) { // NOLINT
             ;
     
     #undef METHOD
+    #undef STATIC_METHOD
     
     //
     
     #define METHOD(name) _METHOD(Date, name)
+    #define STATIC_METHOD(name) _STATIC_METHOD(Date, name)
     
     emscripten::class_<Date>("Date")
-            STATIC_METHOD(Date, of)
+            STATIC_METHOD(of)
             METHOD(time)
             METHOD(year)
             METHOD(dayOfYear)
@@ -166,13 +199,15 @@ EMSCRIPTEN_BINDINGS(r3d3) { // NOLINT
             ;
     
     #undef METHOD
+    #undef STATIC_METHOD
     
     //
     
     #define METHOD(name) _METHOD(Time, name)
+    #define STATIC_METHOD(name) _STATIC_METHOD(Time, name)
     
     emscripten::class_<Time>("Time")
-            STATIC_METHOD(Time, of)
+            STATIC_METHOD(of)
             METHOD(minuteOfDay)
             METHOD(hourOfDay)
             METHOD(minuteOfHour)
@@ -185,10 +220,14 @@ EMSCRIPTEN_BINDINGS(r3d3) { // NOLINT
             ;
     
     #undef METHOD
+    #undef STATIC_METHOD
     
     //
     
+    #undef _STATIC_METHOD
     #undef _METHOD
+    #undef MEMBER
+    #undef PROPERTY
     
 }
 

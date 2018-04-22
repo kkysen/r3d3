@@ -51,7 +51,7 @@ export const Repeater: RepeaterClass = Class.new(() => {
         
         interval(interval: number | NumberFunc): Repeater {
             let intervalFunc: NumberFunc;
-            if (Number.isNumber(interval)) {
+            if (typeof interval === "number") {
                 const intervalValue: number = <number> interval;
                 intervalFunc = () => intervalValue;
             } else {

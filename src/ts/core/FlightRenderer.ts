@@ -8,7 +8,7 @@ export const renderFlights = function() {
         const flightsInDay: FlightsInDay = flights.get(day);
         for (let i = 0; i < flightsInDay.numFlights(); i++) {
             const flight: Flight = flightsInDay.get(i);
-            flight.render();
+            flight.wasmRender();
         }
     }
 };

@@ -1,7 +1,7 @@
 import {Airport} from "./Airport";
 import {Airline} from "./Airline";
 import {DynamicEnum} from "./DynamicEnum";
-import {Flight} from "./Flight";
+import {Flight, ProjectionMarshaller, setFlightInterpolatorState} from "./Flight";
 import {flights, Flights} from "./Flights";
 import {CircleSelection, GeoLocation} from "./GeoLocation";
 import {Date} from "./Date";
@@ -9,11 +9,33 @@ import {GetArray} from "./GetArray";
 import {Time} from "./Time";
 import {Map} from "./map";
 
+export type FlightClass = {
+    
+    projectedLocationPointer(): number;
+    
+    projectedLocationSize(): number;
+    
+    setProjectionPointer(projection: number): void;
+    
+    setProjection(projection: (geoLocation: Point) => Point): void;
+    
+}
+
 interface FlightsModule extends Module {
     
     readonly Flights: {
         
         create(data: Uint8Array): Flights;
+        
+    };
+    
+    readonly Flight: FlightClass;
+    
+    readonly FlightInterpolator: {
+        
+        statePointer(): number;
+        
+        stateSize(): number;
         
     };
     
@@ -80,6 +102,8 @@ export const runAfterWasm = function <T>(func: () => T): Promise<T> {
 };
 
 const extendInterfaces = function(Module: FlightsModule) {
+    ProjectionMarshaller.extendOn(Module.Flight);
+    
     DynamicEnum.extendOn(Module.Airport, "airports");
     DynamicEnum.extendOn(Module.Airline, "airlines");
     
@@ -93,8 +117,15 @@ export const extendFlightsInterfaces = function() {
     Flight.extendOn(flights.flight(0, 0));
 };
 
-export const postWasm = function(): void {
+export const postWasm: Promise<void> = runAfterWasm(() => {
     // console.log("postWasm");
-    
+    Object.defineImmutableProperties(Module, {
+        
+        get HEAP(this: Module): ArrayBuffer {
+            return this.wasmMemory.buffer;
+        },
+        
+    });
+    setFlightInterpolatorState();
     extendInterfaces(Module);
-};
+});

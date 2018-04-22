@@ -19,6 +19,7 @@ exports.Map = {
     path: path,
     svg: svg,
 };
+window.map = exports.Map;
 exports.createMap = function () {
     svg.attrs({
         width: 1000,

@@ -4,7 +4,7 @@ import {Airport} from "./Airport";
 import {Flight} from "./Flight";
 import {FlightsInDay} from "./FlightsInDay";
 import {GetArray} from "./GetArray";
-import {Module} from "./wasm";
+import {Module, postWasm, runAfterWasm} from "./wasm";
 
 export interface Flights extends GetArray<FlightsInDay> {
     
@@ -74,7 +74,7 @@ export const flightsPromise: FlightsSingleton = (function() {
             fetchData("airlines.csv", Module.Airline.load),
             fetchData("airports.csv", Module.Airport.load.then(() => {
                 Airport.extend();
-                Module.Airport.plotAll();
+                postWasm.then(Module.Airport.plotAll);
             })),
             fetchData("flights.bin", data => data),
         ])

@@ -9,7 +9,7 @@ exports.Repeater = class_1.Class.new(() => {
     return Object.freeze({
         interval(interval) {
             let intervalFunc;
-            if (Number.isNumber(interval)) {
+            if (typeof interval === "number") {
                 const intervalValue = interval;
                 intervalFunc = () => intervalValue;
             }

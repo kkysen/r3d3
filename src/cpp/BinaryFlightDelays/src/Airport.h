@@ -6,7 +6,7 @@
 #define BINARYFLIGHTDELAYS_AIRPORT_H
 
 #include "r3d3.h"
-#include "GeoLocation.h"
+#include "util/GeoLocation.h"
 #include "util/DynamicEnum.h"
 
 namespace r3d3 {

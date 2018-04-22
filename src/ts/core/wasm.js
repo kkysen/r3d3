@@ -23,6 +23,7 @@ exports.runAfterWasm = function (func) {
     });
 };
 const extendInterfaces = function (Module) {
+    Flight_1.ProjectionMarshaller.extendOn(Module.Flight);
     DynamicEnum_1.DynamicEnum.extendOn(Module.Airport, "airports");
     DynamicEnum_1.DynamicEnum.extendOn(Module.Airline, "airlines");
     Module.Map = map_1.Map;
@@ -33,8 +34,14 @@ exports.extendFlightsInterfaces = function () {
     GetArray_1.GetArray.extendOn(Flights_1.flights.get(0));
     Flight_1.Flight.extendOn(Flights_1.flights.flight(0, 0));
 };
-exports.postWasm = function () {
+exports.postWasm = exports.runAfterWasm(() => {
     // console.log("postWasm");
+    Object.defineImmutableProperties(exports.Module, {
+        get HEAP() {
+            return this.wasmMemory.buffer;
+        },
+    });
+    Flight_1.setFlightInterpolatorState();
     extendInterfaces(exports.Module);
-};
+});
 //# sourceMappingURL=wasm.js.map

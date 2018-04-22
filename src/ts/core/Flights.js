@@ -42,7 +42,7 @@ exports.flightsPromise = (function () {
             fetchData("airlines.csv", wasm_1.Module.Airline.load),
             fetchData("airports.csv", wasm_1.Module.Airport.load.then(() => {
                 Airport_1.Airport.extend();
-                wasm_1.Module.Airport.plotAll();
+                wasm_1.postWasm.then(wasm_1.Module.Airport.plotAll);
             })),
             fetchData("flights.bin", data => data),
         ])

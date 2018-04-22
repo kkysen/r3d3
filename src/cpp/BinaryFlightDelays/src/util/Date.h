@@ -5,7 +5,7 @@
 #ifndef BINARYFLIGHTDELAYS_DATE_H
 #define BINARYFLIGHTDELAYS_DATE_H
 
-#include "r3d3.h"
+#include "../r3d3.h"
 
 namespace r3d3 {
     
@@ -56,8 +56,6 @@ namespace r3d3 {
         friend std::ostream& operator<<(std::ostream& out, Date date) noexcept;
         
     };
-    
-    std::ostream& operator<<(std::ostream& out, Date date) noexcept;
     
 };
 

@@ -5,7 +5,7 @@
 #ifndef BINARYFLIGHTDELAYS_TIME_H
 #define BINARYFLIGHTDELAYS_TIME_H
 
-#include "r3d3.h"
+#include "../r3d3.h"
 
 namespace r3d3 {
     
@@ -43,11 +43,15 @@ namespace r3d3 {
         Time subtract(Time time) const noexcept;
     
         Time negate() const noexcept;
+        
+        template <typename T>
+        Time operator*(T scale) const noexcept;
     
         #define MAKE_CMP(cmp) \
         friend bool operator cmp(Time time1, Time time2) noexcept
         
         MAKE_CMP(==);
+        MAKE_CMP(!=);
         MAKE_CMP(<);
         MAKE_CMP(>);
         MAKE_CMP(<=);
@@ -61,19 +65,8 @@ namespace r3d3 {
         
     };
     
-    #define MAKE_CMP(cmp) \
-    bool operator cmp(Time time1, Time time2) noexcept
-    
-    MAKE_CMP(==);
-    MAKE_CMP(<);
-    MAKE_CMP(>);
-    MAKE_CMP(<=);
-    MAKE_CMP(>=);
-    
-    #undef MAKE_CMP
-    
-    std::ostream& operator<<(std::ostream& out, Time time) noexcept;
-    
 };
+
+#include "Time.tcc"
 
 #endif //BINARYFLIGHTDELAYS_TIME_H

@@ -17,10 +17,15 @@ const immutableDescriptor: PropertyDescriptor = {
 };
 
 const defineSharedProperties = function(obj: any, sharedDescriptor: PropertyDescriptor, propertyValues: Object) {
-    const properties: PropertyDescriptorMap & ThisType<any> = {};
-    for (const value in propertyValues) {
-        if (propertyValues.hasOwnProperty(value)) {
-            properties[value] = Object.assign({value: propertyValues[value]}, sharedDescriptor);
+    const properties: PropertyDescriptorMap & ThisType<any> = Object.getOwnPropertyDescriptors(propertyValues);
+    for (const propertyName in properties) {
+        if (properties.hasOwnProperty(propertyName)) {
+            let property: PropertyDescriptor = properties[propertyName];
+            property = Object.assign(property, sharedDescriptor);
+            if (property.get || property.set) {
+                delete property.writable;
+            }
+            properties[propertyName] = property;
         }
     }
     Object.defineProperties(obj, properties);
@@ -214,7 +219,7 @@ Object.defineImmutableProperties(Array.prototype, {
 
 declare interface NumberConstructor {
     
-    isNumber(n: any): boolean;
+    isNumber(n: number): boolean;
     
     toPixels(n: number): string;
     

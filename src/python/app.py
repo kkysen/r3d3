@@ -51,14 +51,14 @@ make_file_data_route("map.svg", "data", "")
 map(lambda filename: make_file_data_route(filename, "data/", "data"),
     ["airports.json", "cities.json", "countries.json", "states.json"])
 
-
 # @app.route("/src/<path:filename>")
 # def src_file(filename):
 #     # type: (str) -> Response
 #     print(filename)
 #     return send_from_directory(os.path.abspath(".."), filename)
 
+app.secret_key = os.urandom(32)
+app.debug = True
 
 if __name__ == '__main__':
-    app.secret_key = os.urandom(32)
-    app.run(debug=True)
+    app.run()

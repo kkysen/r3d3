@@ -6,6 +6,7 @@
 #define BINARYFLIGHTDELAYS_GEOLOCATION_H
 
 #include <ostream>
+#include "../r3d3.h"
 
 namespace r3d3 {
     
@@ -13,24 +14,24 @@ namespace r3d3 {
     
     private:
     
-        double _longitude;
-        double _latitude;
+        f64 _longitude;
+        f64 _latitude;
         
-        static double haversine(GeoLocation A, GeoLocation B) noexcept;
+        static f64 haversine(GeoLocation A, GeoLocation B) noexcept;
     
     public:
         
-        GeoLocation(double longitude, double latitude) noexcept;
+        GeoLocation(f64 longitude, f64 latitude) noexcept;
         
-        static GeoLocation of(double longitude, double latitude) noexcept;
+        static GeoLocation of(f64 longitude, f64 latitude) noexcept;
     
-        double longitude() const noexcept;
+        f64 longitude() const noexcept;
         
-        double latitude() const noexcept;
+        f64 latitude() const noexcept;
         
-        double distanceTo(GeoLocation location) const noexcept;
+        f64 distanceTo(GeoLocation location) const noexcept;
         
-        double operator-(GeoLocation location) const noexcept;
+        f64 operator-(GeoLocation location) const noexcept;
         
         friend std::ostream& operator<<(std::ostream& out, GeoLocation location);
 
@@ -42,7 +43,7 @@ namespace r3d3 {
         
         GeoLocation operator*(GeoLocation location) const noexcept;
         
-        friend GeoLocation operator/(double scale, GeoLocation location) noexcept;
+        friend GeoLocation operator/(f64 scale, GeoLocation location) noexcept;
 
     private:
         
@@ -54,23 +55,19 @@ namespace r3d3 {
         
     public:
         
-        static void setScale(double width, double height,
+        static void setScale(f64 width, f64 height,
                              GeoLocation northWest, GeoLocation northEast,
                              GeoLocation southWest, GeoLocation southEast) noexcept;
         
-        static void setScaleContinentalUS(double width, double height) noexcept;
+        static void setScaleContinentalUS(f64 width, f64 height) noexcept;
     
         GeoLocation scale() const noexcept;
         
-        double x() const noexcept;
+        f64 x() const noexcept;
     
-        double y() const noexcept;
+        f64 y() const noexcept;
         
     };
-    
-//    GeoLocation operator/(double scale, GeoLocation location) const noexcept;
-    
-    std::ostream& operator<<(std::ostream& out, GeoLocation location);
     
 };
 

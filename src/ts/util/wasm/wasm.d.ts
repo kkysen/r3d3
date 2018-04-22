@@ -4,20 +4,22 @@ interface Module {
     
     // preamble.js
     
-    buffer: ArrayBuffer;
+    readonly wasmMemory: WebAssembly.Memory;
     
-    HEAP8: Int8Array;
-    HEAP16: Int16Array;
-    HEAP32: Int32Array;
+    readonly HEAP: ArrayBuffer;
     
-    HEAPU8: Uint8Array;
-    HEAPU16: Uint16Array;
-    HEAPU32: Uint32Array;
+    readonly HEAP8: Int8Array;
+    readonly HEAP16: Int16Array;
+    readonly HEAP32: Int32Array;
     
-    HEAPF32: Float32Array;
-    HEAPF64: Float64Array;
+    readonly HEAPU8: Uint8Array;
+    readonly HEAPU16: Uint16Array;
+    readonly HEAPU32: Uint32Array;
     
-    STACKTOP: number;
+    readonly HEAPF32: Float32Array;
+    readonly HEAPF64: Float64Array;
+    
+    readonly STACKTOP: number;
     
     ccall(ident: string, returnType: string, argTypes: string[], args: any[]): any;
     
@@ -67,11 +69,15 @@ interface Module {
     
     removeRunDependency(id: string): void;
     
+    addFunction(func: (...args: any[]) => any, signature: string): number;
+    
+    removeFunction(funcPtr: number): void;
+    
     stackTrace(): void; // TODO FIXME
     
-    preRun: Runnable[];
+    readonly preRun: Runnable[];
     
-    postRun: Runnable[];
+    readonly postRun: Runnable[];
     
 }
 

@@ -39,6 +39,9 @@ namespace r3d3 {
     typedef int32_t i32;
     typedef int64_t i64;
     
+    typedef float f32;
+    typedef double f64;
+    
     template <typename T>
     constexpr size_t numBits();
     

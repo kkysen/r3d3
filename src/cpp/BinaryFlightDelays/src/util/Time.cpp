@@ -63,6 +63,7 @@ namespace r3d3 {
     }
     
     MAKE_CMP(==)
+    MAKE_CMP(!=)
     MAKE_CMP(<)
     MAKE_CMP(>)
     MAKE_CMP(<=)

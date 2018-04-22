@@ -37,6 +37,8 @@ export const Map: Map = {
     
 };
 
+(<any> window).map = Map;
+
 export const createMap = function() {
     svg.attrs({
         width: 1000,

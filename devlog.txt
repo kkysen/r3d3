@@ -568,3 +568,9 @@ The flight filters work on the JS side and you can remove() them, too.
 Just need a user interface to add new filters.
 
 ============================================================
+khyberS - 2018-04-22 20:35:00
+
+While flights.bin stalls, randomly make new requests and open new tabs
+to try to wake up the Flask server.
+
+============================================================

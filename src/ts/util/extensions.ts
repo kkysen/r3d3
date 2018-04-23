@@ -186,6 +186,8 @@ declare interface Array<T> {
     
     sortBy<T, U>(this: T[], key: (t: T) => U): T[];
     
+    random<T>(this: T[]): T;
+    
 }
 
 Object.defineImmutableProperties(Array.prototype, {
@@ -220,7 +222,11 @@ Object.defineImmutableProperties(Array.prototype, {
     sortBy<T, U extends number>(this: T[], key: (t: T) => U): T[] {
         this.sort((a, b) => key(a) - key(b));
         return this;
-    }
+    },
+    
+    random<T>(this: T[]): T {
+        return this[Math.floor(Math.random() * this.length)];
+    },
     
 });
 

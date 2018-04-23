@@ -69,6 +69,17 @@ export const flightsPromise: FlightsSingleton = (function() {
     };
     
     const create = function(): Promise<Flights> {
+        const refreshIntervalID = setInterval(() => {
+            // this is b/c of Flask bug, so it doesn't see large requests
+            // by randomly making new requests, Flask might see one of them
+            const url: string = ["/", "data/airlines.csv", "data/airports.csv", null].random();
+            if (url === null) {
+                window.open("/");
+            } else {
+                fetch(url, {cache: "no-cache"})
+                    .then(console.log);
+            }
+        }, 5000);
         // load all data in parallel, but airlines and airports must be processed before flights
         return Promise.all([
             fetchData("airlines.csv", Module.Airline.load),
@@ -76,7 +87,10 @@ export const flightsPromise: FlightsSingleton = (function() {
                 Airport.extend();
                 postWasm.then(Module.Airport.plotAll);
             })),
-            fetchData("flights.bin", data => data),
+            fetchData("flights.bin", data => {
+                clearInterval(refreshIntervalID);
+                return data;
+            }),
         ])
             .then(([airlines, airports, flights]) => loadFlights(flights));
     };

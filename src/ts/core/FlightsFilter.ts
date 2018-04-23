@@ -91,6 +91,7 @@ flightFilters.addFilter(function inUS(flight: Flight): boolean {
 
 export const createFlightFilterDropdownMenu = function(): void {
     const dropdown: HTMLSelectElement = document.createElement("select");
+    document.body.appendChild(dropdown);
     const data: Airport[] = Module.Airport.all();
     dropdown.length = 0;
     

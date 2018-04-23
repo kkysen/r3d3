@@ -1,6 +1,6 @@
 import {Class} from "./class";
 
-// TODO add types
+// TODO addFilter types
 export const Converter = Class.new((fieldConverters = {}, defaultConverter = Number, defaultValue = 0) => {
         return o => {
             for (const field in o) {

@@ -17,9 +17,11 @@ export interface FlightFilters {
     
     filters: FlightFilter[];
     
-    add(filter: BasicFlightFilter): FlightFilter;
+    addFilter(filter: BasicFlightFilter): FlightFilter;
     
-    addDynamically(functionBody: string): FlightFilter;
+    addMethodFilter<T>(properties: string[], value: T, filter: (t1: T, t2: T) => boolean): FlightFilter;
+    
+    addDynamicFilter(functionBody: string): FlightFilter;
     
 }
 
@@ -37,7 +39,7 @@ export const flightFilters: FlightFilters = (function() {
     
     flightFilter.filters = filters;
     
-    flightFilter.add = function(rawFilter: BasicFlightFilter): FlightFilter {
+    flightFilter.addFilter = function(rawFilter: BasicFlightFilter): FlightFilter {
         const filter: FlightFilter = <FlightFilter> rawFilter;
         filter.index = filters.length;
         
@@ -52,13 +54,17 @@ export const flightFilters: FlightFilters = (function() {
         return filter;
     };
     
-    flightFilter.addDynamically = function(functionBody: string): FlightFilter {
+    flightFilter.addMethodFilter = function<T>(properties: string[], value: T, filter: (t1: T, t2: T) => boolean): FlightFilter {
+    
+    };
+    
+    flightFilter.addDynamicFilter = function(functionBody: string): FlightFilter {
         const filter: BasicFlightFilter = <BasicFlightFilter> new Function("flight", functionBody);
         const returnValue: any = filter(flights.flight(0, 0)); // to catch errors
         if (typeof returnValue !== "boolean") {
             throw new Error("return value of FlightFilter must be a boolean: " + filter);
         }
-        return flightFilter.add(filter);
+        return flightFilter.addFilter(filter);
     };
     
     return flightFilter;
@@ -66,7 +72,7 @@ export const flightFilters: FlightFilters = (function() {
 
 (<any> window).flightFilters = flightFilters;
 
-flightFilters.add(function inUS(flight: Flight): boolean {
+flightFilters.addFilter(function inUS(flight: Flight): boolean {
     const inUS = function(side: FlightSide): boolean {
         return !!side.airport().location().scale();
     };

@@ -270,6 +270,10 @@ export const Flight = {
                 + ")";
         };
         
+        const translate = function(point: Point): string {
+            return "translate(" + Number.toPixels(point[0]) + "," + Number.toPixels(point[1]) + ")";
+        };
+        
         prototype.jsRender = function(this: Flight): Transition<SVGCircleElement, any, SVGSVGElement, any> {
             const departure: Departure = this.departure();
             const arrival: Arrival = this.arrival();
@@ -282,6 +286,7 @@ export const Flight = {
             const start: GeoLocation = departure.airport().location();
             const end: GeoLocation = arrival.airport().location();
             
+            const startPoint: Point = start.scale();
             const endPoint: Point = end.scale();
             
             const startColor = mixColors(RED, GREEN, startDelay / 30);
@@ -300,27 +305,43 @@ export const Flight = {
             };
             // console.log(log);
             
-            if (!start.scale() || !endPoint) {
+            if (!startPoint || !endPoint) {
                 return;
             }
             
-            // TODO can use attrTween to supply custom wasm interpolator
+            const airplaneSvgData: string = "M510,255c0-20.4-17.85-38.25-38.25-38.25H331.5L204,12.75h-51l63.75,204H76.5l-38.25-51H0L25.5,255L0,344.25h38.25\n" +
+                "\t\t\tl38.25-51h140.25l-63.75,204h51l127.5-204h140.25C492.15,293.25,510,275.4,510,255z";
             
             const durationScale = 25;
             const minOpacity = .5;
-            const plot = start.plot(5);
-            return plot.attrs({fill: startColor})
-                .transition()
-                .ease(d3.easeLinear)
-                .duration(duration * durationScale)
-                .styleTween("opacity", () => (t: number) => {
-                    return ((2 / minOpacity * t - 1) ** 2).toString();
-                })
-                .attrs({
-                    cx: endPoint[0],
-                    cy: endPoint[1],
-                    fill: endColor,
-                });
+            
+            const angle: number = Math.atan2(endPoint[1] - startPoint[1], endPoint[0] - startPoint[0]);
+            const rotation: string = "rotate(" + angle + "rad)";
+            
+            const scale: string = "scale(" + 0.05 + ")";
+            
+            return <Transition<SVGCircleElement, any, SVGSVGElement, any>>
+                Map.svg
+                    .append("path")
+                    .attrs({
+                        d: airplaneSvgData,
+                        fill: startColor,
+                    })
+                    .styles({
+                        transform: [translate(startPoint), scale, rotation].join(" "),
+                    })
+                    .transition()
+                    .ease(d3.easeLinear)
+                    .duration(duration * durationScale)
+                    .styleTween("opacity", () => (t: number) => {
+                        return ((2 / minOpacity * t - 1) ** 2).toString();
+                    })
+                    .attrs({
+                        fill: endColor,
+                    })
+                    .styles({
+                        transform: [translate(endPoint), scale, rotation].join(" "),
+                    });
         };
         
         const showAirportDelay = function(side: FlightSide): void {

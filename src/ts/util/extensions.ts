@@ -245,7 +245,7 @@ Object.defineImmutableProperties(Number, {
     },
     
     toPixels(n: number): string {
-        return n + "px";
+        return Math.round(n) + "px";
     },
     
 });

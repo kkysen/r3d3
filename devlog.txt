@@ -574,3 +574,16 @@ While flights.bin stalls, randomly make new requests and open new tabs
 to try to wake up the Flask server.
 
 ============================================================
+khyberS - 2018-04-22 21:23:00
+
+Make the dots actual airplane figures using an SVG path
+and CSS transforms that are d3 transitioned.
+It's even slower than it was before with the dots.
+
+If I used CSS transitions, it would definitely be faster,
+because the GPU would aggressively be used by the browser,
+instead of d3, which just uses the CPU for interpolation.
+
+I'm not sure if I'm allowed to use CSS transitions, though.
+
+============================================================

@@ -42,7 +42,7 @@ export const Map: Map = {
 export const createMap = function() {
     svg.attrs({
         width: 1000,
-        height: 1000,
+        height: 600,
     });
     
     

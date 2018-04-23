@@ -1,3 +1,9 @@
+declare interface HTMLAppendable<T> {
+
+    appendTo(parent: HTMLElement): T;
+
+}
+
 declare interface ObjectConstructor {
     
     defineSharedProperties(object: any, sharedDescriptor: PropertyDescriptor, propertyValues: Object);
@@ -296,6 +302,8 @@ Object.defineImmutableProperties(Element.prototype, {
 
 declare interface HTMLElement {
     
+    appendTo<T extends HTMLElement>(this: T, parent: HTMLElement): T;
+    
     appendNewElement<K extends keyof HTMLElementTagNameMap>(tagName: K): HTMLElementTagNameMap[K];
     
     appendNewElement(tagName: string): HTMLElement;
@@ -306,11 +314,20 @@ declare interface HTMLElement {
     
     appendBr(): HTMLBRElement;
     
-    withInnerText(text: string): HTMLElement;
+    withInnerText<T extends HTMLElement>(this: T, text: string): T;
+    
+    withInnerHTML<T extends HTMLElement>(this: T, html: string): T;
     
 }
 
+declare interface HTMLElement extends HTMLAppendable<HTMLElement> {}
+
 Object.defineImmutableProperties(HTMLElement.prototype, {
+    
+    appendTo<T extends HTMLElement>(this: T, parent: HTMLElement): T {
+        parent.appendChild(this);
+        return this;
+    },
     
     appendNewElement(tagName: string): HTMLElement {
         return this.appendChild(document.createElement(tagName));
@@ -330,8 +347,13 @@ Object.defineImmutableProperties(HTMLElement.prototype, {
         return this.appendNewElement("br");
     },
     
-    withInnerText(text: string): HTMLElement {
+    withInnerText<T extends HTMLElement>(this: T, text: string): T {
         this.innerText = text;
+        return this;
+    },
+    
+    withInnerHTML<T extends HTMLElement>(this: T, html: string): T {
+        this.innerHTML = html;
         return this;
     },
     

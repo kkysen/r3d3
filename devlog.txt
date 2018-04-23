@@ -605,3 +605,8 @@ khyberS - 2018-04-23 00:54:00
 Fixed filter dropdown menu (added correct types and moved to FlightFilters.ts).
 
 ============================================================
+khyberS - 2018-04-23 04:04:00
+
+Added Flight Filter UI.
+
+============================================================

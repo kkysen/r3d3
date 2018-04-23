@@ -364,7 +364,7 @@ export const Flight = {
             this.jsRender()
                 .on("start", () => showAirportDelay(this.departure()))
                 .on("end", () => showAirportDelay(this.arrival()))
-                // .remove()
+                .remove()
             ;
         };
     },

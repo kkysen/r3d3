@@ -1,4 +1,4 @@
-import {renderFlights} from "./core/FlightRenderer";
+import {flier, renderFlights} from "./core/FlightRenderer";
 import {flights, flightsPromise} from "./core/Flights";
 import {createMap} from "./core/Map";
 import {extendFlightsInterfaces, postWasm, runAfterWasm, Module} from "./core/wasm";
@@ -28,12 +28,12 @@ const flightsMain = function(): void {
     
     timeDistances.timed()();
     
-    console.log(renderFlights);
     (<any> window).flight = flights.flight(0, 0);
 };
 
 const preFlightsMain = function(): void {
     createMap();
+    flier();
 };
 
 const realMain = function(): void {

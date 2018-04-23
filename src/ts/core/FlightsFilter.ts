@@ -118,11 +118,14 @@ interface DynamicFlightFilterField extends HTMLAppendable<DynamicFlightFilterFie
     
 }
 
-const newDynamicFlightFilterField = function(): DynamicFlightFilterField {
+const newDynamicFlightFilterField = function(first: boolean): DynamicFlightFilterField {
     
     const div: HTMLDivElement = document.createElement("div");
     
-    const functionHeader: string = "function filter(flight) {\n    \n}";
+    const functionHeader: string = !first
+        ? "function filter(flight) {\n    \n}"
+        : "function filter(flight) {\n    return flight.departure().airport().iataCode() === \"JFK;\"\n}"
+    ;
     const codeBox: HTMLTextAreaElement = div.appendNewElement("code")
         .appendNewElement("textarea")
         .withInnerHTML(functionHeader);
@@ -235,7 +238,8 @@ const newDynamicFlightFilterFields = function(): DynamicFlightFilterFields {
             "You can add more filter functions and remove the ones you have by clicking the buttons below.",
             "Click <code>Compile and Add Filter Function</code> to add the filter.",
             "Now when you click <code>Fly</code>, your filters will be applied.",
-            'Click here for the <a href="' + apiURL + '" target="_blank">Flight API</a>.',
+            "Click here for the <a href=\"" + apiURL + "\" target=\"_blank\">Flight API</a>.",
+            "An example has been given below, which will show only flights leaving from JFK.",
         ].join("<br>"));
     
     const fields: HTMLDivElement = div.appendNewElement("div");
@@ -247,7 +251,7 @@ const newDynamicFlightFilterFields = function(): DynamicFlightFilterFields {
         .withInnerText("Add New Filter");
     
     const addNewField = function(first: boolean = false): void {
-        const field: DynamicFlightFilterField = newDynamicFlightFilterField();
+        const field: DynamicFlightFilterField = newDynamicFlightFilterField(first);
         const br: HTMLBRElement = document.createElement("br");
         const hr: HTMLHRElement = document.createElement("hr");
         const elements: HTMLAppendable<any>[] = first ? [field] : [br, hr, field];

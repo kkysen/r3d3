@@ -610,3 +610,8 @@ khyberS - 2018-04-23 04:04:00
 Added Flight Filter UI.
 
 ============================================================
+khyberS - 2018-04-23 05:02:00
+
+Added Start and End date inputs and a Fly and Cancel Flights buttons.
+
+============================================================

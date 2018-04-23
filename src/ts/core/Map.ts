@@ -20,12 +20,15 @@ export interface Map {
     readonly projection: GeoProjection;
     readonly path: GeoPath<SVGPathElement, any>;
     readonly svg: Selection<SVGSVGElement, any, any, any>;
+    readonly header: Selection<HTMLDivElement, any, any, any>;
     
 }
 
+const body: Selection<HTMLBodyElement, any, any, any> = <any> d3.select(document.body);
 const projection: GeoProjection = d3.geoAlbersUsa();
 const path: GeoPath<SVGPathElement, any> = d3.geoPath(projection);
-const svg: Selection<SVGSVGElement, any, any, any> = d3.select(document.body).append("svg");
+const header: Selection<HTMLDivElement, any, any, any>  = body.append("div");
+const svg: Selection<SVGSVGElement, any, any, any> = body.append("svg");
 
 export const Map: Map = {
     
@@ -34,6 +37,8 @@ export const Map: Map = {
     path: path,
     
     svg: svg,
+    
+    header: header,
     
 };
 
@@ -44,7 +49,6 @@ export const createMap = function() {
         width: 1000,
         height: 600,
     });
-    
     
     const name = "states";
     

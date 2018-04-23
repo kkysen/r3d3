@@ -257,6 +257,205 @@ an interpreter/compiler of sorts implemented in Wasm.
 Instead, we can just pass a JS function to the Wasm code in those cases.
 
 ============================================================
+khyberS - 2018-04-08 00:58:00
+
+factored out Date and Time structs from CompactFlight and CompactFlight::Side
+and added extra methods computing other fields
+(like scheduledTime, duration/elapsedTime, and soon distance),
+which were originally in the CSV file
+
+============================================================
+khyberS - 2018-04-18 02:33:00
+
+converted CompactFlight to new bit layout using C++ bit fields
+
+bitfields are compacted using #pragma pack into:
+    77 bit/flight
+    10 bytes/flight
+    32 bits/side (good for clean, fast, 32-bit aligned access)
+    4 bytes/side
+
+Thus, the flights will only use about 60 MB of memory, not that much,
+and all the field accesses will still be fast
+
+    The only possible slow field is distance(),
+    which must look up each airport by index
+    and compute distances based on airport coordinates.
+    Adding a distance field in each CompactFlight would
+    add 13 bits for a total of 90 bits, 12 bytes/flight.
+    Or the airport-airport distances can be precomputed.
+
+these bit sizes were based on the analysis run on the ranges of every field
+
+============================================================
+khyberS - 2018-04-10 18:12:00
+
+Created Airline and Airport classes, which are basically indices into DynamicEnums.
+
+Added a Geolocation class, between which distance can be computed.
+
+Now a CompactFlight has a distance() method that uses pre-cached distances calculated between every airport.
+
+============================================================
+khyberS - 2018-04-10 18:37:00
+
+Added TypeScript interfaces conforming to the exported Wasm interface from the C++ code,
+stemming from the CompactFlight class.
+
+Updated some exported methods in the emscripten bindings at the bottom of Flights.h.
+
+============================================================
+khyberS - 2018-04-12 00:42:00
+
+Added Flights.ts, which exports the const flights,
+which has a get() method returning a singleton Promise<Flights>.
+On the first call, it fetches the data and instantiates the Flights object.
+
+============================================================
+khyberS - 2018-04-13 03:24:00
+
+Got all the server side C++ code to work.
+
+Running ./CompactFlights reads in the CSV files,
+compacts them into Flights, and serializes them to flights.bin.
+It then checks to make sure it can properly deserialize flights.bin.
+
+Running the analyzeFields() function in CompactFields.cpp (instead of compactFlights()),
+does the analysis of the ranges and bits required for each field.
+This matches the manual analysis I did earlier, so all the bit fields are correct.
+
+I commented out the Wasm bindings for now to focus on the C++ server side,
+but now I'll go back and compile it all to Wasm.
+
+Apparently templates have to implemented in header files,
+so I moved all template implementations to .tcc files,
+which are included at the bottom of their corresponding header.
+This resolves most of the undefined reference issues.
+
+Set values for static fields in Airport and Airline
+in .cpp files, which resolves the rest of the undefined reference issues.
+To do so, I also had to create an empty constructor for DynamicEnum.
+
+Fixed Date class, b/c mktime() doesn't convert day of year to time.
+I had to do the efficient day of year to month and day of month myself,
+using an algorithm adapted from http://howardhinnant.github.io/date_algorithms.html.
+
+Adding std::ostream &operator<< to Date and Time for printing.
+
+Added Time::between(Time, Time) to calculate the time between,
+checking if the first time is actually after the second time,
+meaning that the days are different, and then negating the result accordingly.
+Do do this, I also overloaded all the comparison operators.
+
+============================================================
+khyberS - 2018-04-14 00:33:00
+
+Everything compiles and kind of runs in Wasm
+(not what I want, but main()) now,
+but the exports aren't working yet.
+
+============================================================
+khyberS - 2018-04-14 01:42:00
+
+Wasm works! The exports appear to be working,
+but the data fetching in Flask hasn't been set up yet,
+so I haven't been able to fully test the Wasm yet.
+
+============================================================
+khyberS - 2018-04-14 20:25:00
+
+The Wasm is almost completely linked in webpack now; I fixed all the bugs.
+
+The main bug was the preamble.js emcc-generated JS for loading the wasm,
+which ran the wasm with arguments to main.  These arguments defaulted to []
+and were overrode by the functions arguments.
+Normally, since the JS didn't run inside a function, these arguments were undefined,
+but since webpack puts it in an IIFE,
+there were unexpected arguments that were crashing the wasm running.
+
+ The JS only and the HTML too versions are generated in
+ src/cpp/BinaryFlightDelays/wasm from the Makefile,
+ and then a Python script removes the arguments line.
+
+ Webpack then bundles all the normal TS/JS into dist/r3d3.js
+ and the wasm JS into dist/wasm.js,
+ which both are included in dist/index.html,
+ which is generated from src/html/index.html and html-webpack-plugin.
+
+ src/ts/util/wasm/wasm.d.ts declares the Module interface and the Module global.
+ src/ts/core/wasm.ts declares the r3d3/Flights extension functions to Module.
+
+ I also wrote a minimal Flask server to serve (in dist/), index.html at '/',
+ and all the data routes for flights.bin, airports.csv, airlines.csv, and CompactFlights.wasm.
+
+ Right now, there is now dependency between r3d3.js and wasm.js,
+ but there should be, because r3d3.js should only run once wasm.js has loaded.
+ To introduce this dependency, and to expose the IIFE enclosed Module in wasm.js to r3d3.js,
+ I'm going to add another python script that puts CompactFlights.js
+ into a simple wrapper CompactFlights.ts.
+ Since TS is a superset of JS, I can leave most of it all the same,
+ but I can declare the type of Module so that I can import it in r3d3.js.
+ After doing this, Webpack should be able to bundle everything in r3d3.js.
+
+============================================================
+khyberS - 2018-04-15 05:11:00
+
+r3d3.js and wasm.js are correctly linked now.
+
+r3d3.js's main() functions are registered as postRun functions in Module,
+so they're run after the wasm code (it's empty main()) has finished running.
+
+The JS Wasm interop isn't working yet,
+but the bigger bug is in the Flask server.
+
+I implemented a localStorage cachedFetch() method over fetch(),
+although it doesn't work for large files like flights.bin,
+since it exceeds localStorage's quota.
+
+The reason I tried implementing this is that the Flask server
+often doesn't receive the browser's request through fetch() for some reason.
+I'm not sure if this an error in Chrome, Flask, or something on my computer.
+
+============================================================
+khyberS - 2018-04-15 05:58:00
+
+The JS-Wasm interop is fixed.
+
+Turns out I can't use raw pointer even with allow_raw_pointers(),
+because then the functions have unbound types and fail in JS.
+Now I can get the Flights object in JS,
+I just have to finish writing the Flights API to access individual CompactFlights.
+
+============================================================
+khyberS - 2018-04-15 16:18:00
+
+All of the Wasm seems to work.
+
+I can interact with all of the CompactFlight methods and sub-objects from JS.
+The only main Wasm thing left is to write a better API for Flights.
+
+============================================================
+khyberS - 2018-04-17 02:17:00
+
+Added a bunch of JS and Flights API extensions to make manipulating them easier.
+
+============================================================
+khyberS - 2018-04-17 13:04:00
+
+Fixed the SVG map. Instead of using <object>,
+I make a fetch() call for the raw SVG string and add it to a div as innerHTML.
+
+============================================================
+khyberS - 2018-04-17 18:28:00
+
+removed flights.csv, since it's too big (600 MB) and is eating up my Git LFS data plan
+
+============================================================
+khyberS - 2018-04-17 20:53:00
+
+Added the lat, lng to x, y conversion in GeoLocation.
+
+============================================================
 xiangQ - 2018-04-18 0:30:00
 
 Added a simple demo representing the final product of our project
@@ -274,7 +473,6 @@ As of right now, I have them flying to some other arbitrary airport in the coord
 wangK - 2018-04-17 13:20:00
 
 Worked on converting latitudes and longitudes into pixels on svg canvas
-
 
 ============================================================
 anishS - 2018-04-17 18:30:00
@@ -298,3 +496,75 @@ Added json files of data (coordinates) used for drawing the US map and airports
 Drew map of the US states from coordinates using topojson
 Added dots representing airports onto the map
 Tried to match the dots to the map (scaling is a little off)
+
+============================================================
+khyberS - 2018-04-18 01:29:00
+
+Deleted DS_Stores and added to .gitignore.
+
+============================================================
+khyberS - 2018-04-18 07:03:00
+
+Updated README.md and fixed Makefiles.
+
+============================================================
+khyberS - 2018-04-19 04:22:00
+
+Plotted all Airports.
+
+Using d3.geoAlbersUsa(): GeoProjection,
+I can map longitude, latitude to x, y on the SVG.
+I adapted Queenie's code in index.js for drawing the states
+using the d3.geoPath(projection), and then iterated through the airports,
+creating circles at their locations with tooltips onmouseover
+that display the airport name and IATA code.
+
+I also reformulated the data loading flow.
+The airlines, airports, and flights data is all loaded in parallel,
+but the airlines and airports data is explicitly processed first
+before the flights are loaded,
+because the flights depend on the airlines and airports.
+This was done in Flights.ts,
+and I also had to rewrite the loading functions in C++.
+
+============================================================
+khyberS - 2018-04-19 04:29:00
+
+Cleaned up index.html.
+
+============================================================
+khyberS - 2018-04-19 12:25:00
+
+Started adding flight animation in Flight.render().
+
+============================================================
+khyberS - 2018-04-22 17:39:00
+
+Fixed wasm flight renderer and interpolator and got flight.render() to work acceptably.
+
+Also, gunicorn doesn't solve the Flask bug.
+
+============================================================
+khyberS - 2018-04-22 18:12:00
+
+Got basic flight rendering to work fairly well.
+
+Just run renderFlightInDay(0) to animate all the flights on day 0,
+and renderFlights() to animate them all.
+It does take a while because it lags, though.
+
+============================================================
+khyberS - 2018-04-22 19:33:00
+
+Made map white with black colors so flights are easier to see.
+
+Started implementing a flight filter: flightFilter.
+stopRenderingFlights(stop=true) stops the current flight rendering.
+
+============================================================
+khyberS - 2018-04-22 19:51:00
+
+The flight filters work on the JS side and you can remove() them, too.
+Just need a user interface to add new filters.
+
+============================================================

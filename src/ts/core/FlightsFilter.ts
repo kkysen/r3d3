@@ -1,5 +1,7 @@
+import {Airport} from "./Airport";
 import {Flight, FlightSide} from "./Flight";
 import {flights} from "./Flights";
+import {Module} from "./wasm";
 
 type BasicFlightFilter = (flight: Flight) => boolean;
 
@@ -54,8 +56,15 @@ export const flightFilters: FlightFilters = (function() {
         return filter;
     };
     
-    flightFilter.addMethodFilter = function<T>(properties: string[], value: T, filter: (t1: T, t2: T) => boolean): FlightFilter {
-    
+    flightFilter.addMethodFilter = function <T>(
+        methods: string[], value: T, filter: (t1: T, t2: T) => boolean): FlightFilter {
+        return flightFilter.addFilter(flight => {
+            let accessed: any = flight;
+            for (const method of methods) {
+                accessed = accessed[method]();
+            }
+            return filter(accessed, value);
+        });
     };
     
     flightFilter.addDynamicFilter = function(functionBody: string): FlightFilter {
@@ -78,3 +87,26 @@ flightFilters.addFilter(function inUS(flight: Flight): boolean {
     };
     return inUS(flight.departure()) && inUS(flight.arrival());
 });
+
+
+export const createFlightFilterDropdownMenu = function(): void {
+    const dropdown: HTMLSelectElement = document.createElement("select");
+    const data: Airport[] = Module.Airport.all();
+    dropdown.length = 0;
+    
+    const defaultOption: HTMLOptionElement = document.createElement("option");
+    defaultOption.text = "Choose Airport";
+    
+    dropdown.add(defaultOption);
+    dropdown.selectedIndex = 0;
+    
+    for (let i = 0; i < data.length; i++) {
+        const option: HTMLOptionElement = document.createElement("option");
+        const code: string = data[i].iataCode();
+        console.log(data[i]);
+        option.text = code;
+        option.text = code;
+        dropdown.add(option);
+    }
+    
+};

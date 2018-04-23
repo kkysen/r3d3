@@ -2,6 +2,7 @@ import {cachedFetch, Fetch} from "../util/cachedFetch";
 import {SHA} from "../util/hash";
 import {Airport} from "./Airport";
 import {Flight} from "./Flight";
+import {createFlightFilterDropdownMenu} from "./FlightsFilter";
 import {FlightsInDay} from "./FlightsInDay";
 import {GetArray} from "./GetArray";
 import {Module, postWasm, runAfterWasm} from "./wasm";
@@ -85,7 +86,7 @@ export const flightsPromise: FlightsSingleton = (function() {
             fetchData("airlines.csv", Module.Airline.load),
             fetchData("airports.csv", Module.Airport.load.then(() => {
                 Airport.extend();
-                postWasm.then(Module.Airport.plotAll);
+                postWasm.then(Module.Airport.plotAll).then(createFlightFilterDropdownMenu);
             })),
             fetchData("flights.bin", data => {
                 clearInterval(refreshIntervalID);

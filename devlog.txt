@@ -587,8 +587,21 @@ instead of d3, which just uses the CPU for interpolation.
 I'm not sure if I'm allowed to use CSS transitions, though.
 
 ============================================================
+khyberS - 2018-04-23 00:36:00
+
+Moved FlightFilters to FlightFilters.ts and added FlightFilters.addDynamically(),
+which adds a new filter from a function body string.
+
+============================================================
 anishS - 2018-04-23 00:38:23
 
 Added the html for filtering flights by airport. Added code in
 r3d3.ts to populate the dropdown but it currently gives a memory
 access issue.
+
+============================================================
+khyberS - 2018-04-23 00:54:00
+
+Fixed filter dropdown menu (added correct types and moved to FlightFilters.ts).
+
+============================================================

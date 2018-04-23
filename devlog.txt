@@ -459,7 +459,7 @@ Added the lat, lng to x, y conversion in GeoLocation.
 xiangQ - 2018-04-18 0:30:00
 
 Added a simple demo representing the final product of our project
-The demo includes a svg file of the US map and dots representing some airports in the United States 
+The demo includes a svg file of the US map and dots representing some airports in the United States
 
 ============================================================
 anishS - 2018-04-12 22:22:00
@@ -486,9 +486,9 @@ Latitude: ((lat - 26) / 23) * height of picture
 wangK - 2018-04-17 23:30:00
 
 Worked on fixing the formula that converts lat/lon to pixels
-The points are scaled correctly relative to each other 
+The points are scaled correctly relative to each other
 but not relative to the picture of the map
- 
+
 ============================================================
 xiangQ - 2018-04-18 0:30:00
 
@@ -587,9 +587,8 @@ instead of d3, which just uses the CPU for interpolation.
 I'm not sure if I'm allowed to use CSS transitions, though.
 
 ============================================================
-khyberS - 2018-04-23 00:36:00
+anishS - 2018-04-23 00:38:23
 
-Moved FlightFilters to FlightFilters.ts and added FlightFilters.addDynamically(),
-which adds a new filter from a function body string.
-
-============================================================
+Added the html for filtering flights by airport. Added code in
+r3d3.ts to populate the dropdown but it currently gives a memory
+access issue.

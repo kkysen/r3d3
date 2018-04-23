@@ -3,6 +3,7 @@ import {flights, flightsPromise} from "./core/Flights";
 import {createMap} from "./core/Map";
 import {extendFlightsInterfaces, postWasm, runAfterWasm} from "./core/wasm";
 import d3 = require("d3");
+import {Module} from "./core/wasm";
 
 const timeDistances = (<any> window).timeDistances = function() {
     console.log("running");

@@ -587,3 +587,9 @@ instead of d3, which just uses the CPU for interpolation.
 I'm not sure if I'm allowed to use CSS transitions, though.
 
 ============================================================
+khyberS - 2018-04-23 00:36:00
+
+Moved FlightFilters to FlightFilters.ts and added FlightFilters.addDynamically(),
+which adds a new filter from a function body string.
+
+============================================================

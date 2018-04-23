@@ -1,4 +1,5 @@
 import {Transition} from "d3-transition";
+import {Selection} from "d3-selection";
 import {ReattachingBuffer} from "../util/ReattachingBuffer";
 import {Airline} from "./Airline";
 import {Airport} from "./Airport";
@@ -220,7 +221,7 @@ export interface Flight {
     
     wasmRender(): Transition<SVGCircleElement, any, SVGSVGElement, any>;
     
-    jsRender(): Transition<SVGCircleElement, any, SVGSVGElement, any>;
+    jsRender(): Transition<SVGPathElement, any, SVGSVGElement, any>;
     
 }
 
@@ -274,7 +275,11 @@ export const Flight = {
             return "translate(" + Number.toPixels(point[0]) + "," + Number.toPixels(point[1]) + ")";
         };
         
-        prototype.jsRender = function(this: Flight): Transition<SVGCircleElement, any, SVGSVGElement, any> {
+        const millis = function(time: number): string {
+            return Math.round(time * 1000) + "ms";
+        };
+        
+        prototype.jsRender = function(this: Flight): Transition<SVGPathElement, any, SVGSVGElement, any> {
             const departure: Departure = this.departure();
             const arrival: Arrival = this.arrival();
             
@@ -320,28 +325,33 @@ export const Flight = {
             
             const scale: string = "scale(" + 0.05 + ")";
             
-            return <Transition<SVGCircleElement, any, SVGSVGElement, any>>
-                Map.svg
-                    .append("path")
-                    .attrs({
-                        d: airplaneSvgData,
-                        fill: startColor,
-                    })
-                    .styles({
-                        transform: [translate(startPoint), scale, rotation].join(" "),
-                    })
-                    .transition()
-                    .ease(d3.easeLinear)
-                    .duration(duration * durationScale)
-                    .styleTween("opacity", () => (t: number) => {
-                        return ((2 / minOpacity * t - 1) ** 2).toString();
-                    })
-                    .attrs({
-                        fill: endColor,
-                    })
-                    .styles({
-                        transform: [translate(endPoint), scale, rotation].join(" "),
-                    });
+            const airplane: Selection<SVGPathElement, any, SVGSVGElement, any> = <any> Map.svg
+                .append("path")
+                .attrs({
+                    d: airplaneSvgData,
+                })
+                .styles({
+                    fill: startColor,
+                    transform: [translate(startPoint), scale, rotation].join(" "),
+                });
+            
+            if (Module.Flight.useCSSTransitions) {
+                // CSS transitions should be faster b/c use GPU efficiently
+                throw new Error("not implemented yet");
+            } else {
+                return <Transition<SVGPathElement, any, SVGSVGElement, any>>
+                    airplane
+                        .transition()
+                        .ease(d3.easeLinear)
+                        .duration(duration * durationScale)
+                        .styleTween("opacity", () => (t: number) => {
+                            return ((2 / minOpacity * t - 1) ** 2).toString();
+                        })
+                        .styles({
+                            fill: endColor,
+                            transform: [translate(endPoint), scale, rotation].join(" "),
+                        });
+            }
         };
         
         const showAirportDelay = function(side: FlightSide): void {
@@ -354,7 +364,8 @@ export const Flight = {
             this.jsRender()
                 .on("start", () => showAirportDelay(this.departure()))
                 .on("end", () => showAirportDelay(this.arrival()))
-                .remove();
+                // .remove()
+            ;
         };
     },
     

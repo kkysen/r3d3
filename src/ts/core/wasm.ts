@@ -29,7 +29,11 @@ interface FlightsModule extends Module {
         
     };
     
-    readonly Flight: FlightClass;
+    readonly Flight: FlightClass & {
+        
+        useCSSTransitions: boolean;
+        
+    };
     
     readonly FlightInterpolator: {
         

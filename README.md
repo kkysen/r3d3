@@ -32,13 +32,13 @@ An example is given there, too.
 
 ## How To Run
 
-  1. Clone this repository: ```git clone https://github.com/kkysen/r3d3.git```.
-  2. Create a virtual environment using ```virtualenv``` or activate an existing one.
+  1. Clone this repository: ```git clone https://github.com/kkysen/r3d3.git```.  
+  2. Create a virtual environment using ```virtualenv``` or activate an existing one.  
   3. In the virtual environment, cd into the repository
      and run ```make install``` to install dependencies
-     and then ```make run``` to start the Flask server.
-  4. With the flask app now running, navigate to ```localhost:5000``` in your browser.
-     Because of a Flask bug, you may need to open a second tab to correctly load the first one.
+     and then ```make run``` to start the Flask server.  
+  4. With the flask app now running, navigate to ```localhost:5000``` in your browser.  
+     Because of a Flask bug, you may need to open a second tab to correctly load the first one.  
 
 ## How to Compile
 
